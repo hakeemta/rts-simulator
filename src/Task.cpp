@@ -2,64 +2,64 @@
 #include <stdexcept>
 #include <vector>
 
-time_t Task::_Laxity() { return attrs.Dt - attrs.Ct; }
+time_t Task::_Laxity() { return _attrs.Dt - _attrs.Ct; }
 
 void Task::_Update() {
-  attrs = {.Ct = params.C, .Dt = params.D, .Rt = params.C, .Lt = _Laxity()};
-  status = TaskStatus::IDLE;
+  _attrs = {.Ct = _params.C, .Dt = _params.D, .Rt = _params.C, .Lt = _Laxity()};
+  _status = TaskStatus::IDLE;
 }
 
 double Task::Util() {
-  if (util == 0) {
-    util = static_cast<double>(params.C) / params.D;
+  if (_util == 0) {
+    _util = static_cast<double>(_params.C) / _params.D;
   }
-  return util;
+  return _util;
 }
 
-Task::Task(time_t C, time_t D, time_t T) : params{C, D, T} {}
-Task::Task(TaskParameters params) : params(params) {}
+Task::Task(time_t C, time_t D, time_t T) : _params{C, D, T} {}
+Task::Task(TaskParameters params) : _params(params) {}
 
 bool Task::Ready() {
-  return (status == TaskStatus::IDLE) || (status == TaskStatus::RUNNING);
+  return (_status == TaskStatus::IDLE) || (_status == TaskStatus::RUNNING);
 }
 
 void Task::Reset() {
-  t = 0;
-  releases = 0;
+  _t = 0;
+  _releases = 0;
   _Update();
 }
 
 TaskStatus Task::Step(bool selected, time_t delta) {
   if (!selected) {
-    if (status == TaskStatus::RUNNING) {
-      status = TaskStatus::IDLE;
+    if (_status == TaskStatus::RUNNING) {
+      _status = TaskStatus::IDLE;
     }
   } else {
     if (!Ready()) {
       throw std::out_of_range("Task execution overrun");
     }
 
-    attrs.Ct -= delta;
-    status = attrs.Ct > 0 ? TaskStatus::RUNNING : TaskStatus::COMPLETED;
+    _attrs.Ct -= delta;
+    _status = _attrs.Ct > 0 ? TaskStatus::RUNNING : TaskStatus::COMPLETED;
   }
 
-  t += delta;
-  attrs.Dt -= delta;
-  attrs.Lt = _Laxity();
+  _t += delta;
+  _attrs.Dt -= delta;
+  _attrs.Lt = _Laxity();
 
-  if (status == TaskStatus::IDLE) {
-    attrs.Rt += delta;
+  if (_status == TaskStatus::IDLE) {
+    _attrs.Rt += delta;
   }
 
-  if (attrs.Rt > params.D) {
+  if (_attrs.Rt > _params.D) {
     throw std::out_of_range("Task deadline miss");
   }
 
-  auto r = params.O + (releases * params.T);
-  if (t >= (r + params.T)) {
+  auto r = _params.O + (_releases * _params.T);
+  if (_t >= (r + _params.T)) {
     _Update();
-    releases += 1;
+    _releases += 1;
   }
 
-  return status;
+  return _status;
 }

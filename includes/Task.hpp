@@ -1,6 +1,6 @@
 #include <ctime>
 
-enum TaskStatus { IDLE = 0, RUNNING, COMPLETED };
+enum class TaskStatus { IDLE, RUNNING, COMPLETED };
 
 struct TaskParameters {
   time_t C;
@@ -27,12 +27,12 @@ public:
   TaskStatus Step(bool selected, time_t delta);
 
 private:
-  time_t t;
-  long releases;
-  double util{0.0};
-  TaskParameters params;
-  TaskAttributes attrs;
-  TaskStatus status{TaskStatus::IDLE};
+  time_t _t;
+  long _releases;
+  double _util{0.0};
+  TaskParameters _params;
+  TaskAttributes _attrs;
+  TaskStatus _status{TaskStatus::IDLE};
 
   time_t _Laxity();
   void _Update();
