@@ -23,7 +23,9 @@ public:
 private:
   int _m{1};
   double _util{0.0};
-  std::vector<std::shared_ptr<Task>> _tasks;
+  std::vector<std::shared_ptr<Task>> _completed_tasks;
+  std::vector<std::shared_ptr<Task>> _ready_tasks;
+
   time_t _t{0};
   time_t _dt{0};
 };

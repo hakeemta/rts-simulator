@@ -9,10 +9,6 @@ Task::Task(TaskParameters params) : _params(params) {
   Reset();
 }
 
-bool Task::_Ready() {
-  return (_status == TaskStatus::IDLE) || (_status == TaskStatus::RUNNING);
-}
-
 void Task::_Update(bool reset) {
   if (reset) {
     _attrs = {.Ct = _params.C, .Dt = _params.D};
@@ -32,13 +28,17 @@ void Task::Reset(bool start) {
   _Update();
 }
 
-TaskStatus Task::Step(bool selected, time_t delta) {
+bool Task::Ready() {
+  return (_status == TaskStatus::IDLE) || (_status == TaskStatus::RUNNING);
+}
+
+bool Task::Step(bool selected, time_t delta) {
   if (!selected) {
     if (_status == TaskStatus::RUNNING) {
       _status = TaskStatus::IDLE;
     }
   } else {
-    if (!_Ready()) {
+    if (!Ready()) {
       throw std::out_of_range("Task execution overrun");
     }
 
@@ -61,5 +61,5 @@ TaskStatus Task::Step(bool selected, time_t delta) {
     Reset(false);
   }
 
-  return _status;
+  return Ready();
 }

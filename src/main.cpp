@@ -10,12 +10,15 @@ int main() {
   task.Step();
   TaskAttributes attrs = task();
 
-  TaskSystem system(2);
-  system.AddTask(std::move(std::make_unique<Task>(TaskParameters{2, 4})));
+  TaskSystem system(1);
+  system.AddTask(std::move(std::make_unique<Task>(TaskParameters{1, 2})));
   system.AddTask(std::move(std::make_unique<Task>(TaskParameters{3, 6})));
 
   TaskSystem systemSnapshot(std::move(system));
   system = std::move(systemSnapshot);
+
+  system.Run({1});
+  system.Run({0});
 
   std::cout << system.Util() << std::endl;
 

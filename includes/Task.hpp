@@ -32,7 +32,8 @@ public:
   void Reset(bool start = true);
   const TaskParameters Parameters() const { return _params; };
   const TaskAttributes operator()() const { return _attrs; };
-  TaskStatus Step(bool selected = false, time_t delta = 1);
+  bool Ready();
+  bool Step(bool selected = false, time_t delta = 1);
 
 private:
   time_t _t{0};
@@ -42,7 +43,6 @@ private:
   TaskAttributes _attrs;
   TaskStatus _status{TaskStatus::IDLE};
 
-  bool _Ready();
   void _Update(bool reset = true);
 };
 
