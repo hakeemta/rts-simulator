@@ -4,14 +4,14 @@
 #include <vector>
 
 Task::Task(TaskParameters params) : _params(params) {
-  _util = static_cast<double>(_params.C) / _params.D;
-  assert(_util <= 1.0);
+  assert(_params.U <= 1.0);
   Reset();
 }
 
-void Task::_Update(bool reset) {
-  if (reset) {
-    _attrs = {.Ct = _params.C, .Dt = _params.D};
+void Task::_Update(bool reload) {
+  if (reload) {
+    _attrs.Ct = _params.C;
+    _attrs.Dt = _params.D;
   }
 
   _attrs.Lt = _attrs.Dt - _attrs.Ct;
@@ -21,7 +21,7 @@ void Task::_Update(bool reset) {
 void Task::Reset(bool start) {
   if (start) {
     _t = 0;
-    _releases = 0;
+    _attrs.releases = 1;
   }
 
   _status = TaskStatus::IDLE;
@@ -55,9 +55,9 @@ bool Task::Step(bool selected, time_t delta) {
     throw std::out_of_range("Task deadline miss");
   }
 
-  auto r = _params.O + (_releases * _params.T);
-  if (_t >= (r + _params.T)) {
-    _releases += 1;
+  auto next_r = _params.O + (_attrs.releases * _params.T);
+  if (_t >= next_r) {
+    _attrs.releases += 1;
     Reset(false);
   }
 

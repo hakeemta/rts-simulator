@@ -18,7 +18,11 @@ public:
   void Reset();
   void Commit();
   void AddTask(std::unique_ptr<Task> task);
-  bool Run(const std::vector<int> &indices);
+  const time_t T() const { return _t; }
+  const std::vector<std::pair<TaskParameters, TaskAttributes>>
+  operator()() const;
+  const std::vector<std::pair<TaskParameters, TaskAttributes>>
+  operator()(const std::vector<int> &indices);
 
 private:
   int _m{1};

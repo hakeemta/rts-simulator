@@ -104,7 +104,19 @@ void TaskSystem::AddTask(std::unique_ptr<Task> task) {
   _ready_tasks.emplace_back(std::move(task));
 }
 
-bool TaskSystem::Run(const std::vector<int> &indices) {
+const std::vector<std::pair<TaskParameters, TaskAttributes>>
+TaskSystem::operator()() const {
+  std::vector<std::pair<TaskParameters, TaskAttributes>> state;
+  std::transform(_ready_tasks.begin(), _ready_tasks.end(),
+                 std::back_inserter(state),
+                 [](const std::shared_ptr<Task> &tau) {
+                   return std::pair(tau->Parameters(), tau->Attributes());
+                 });
+  return state;
+};
+
+const std::vector<std::pair<TaskParameters, TaskAttributes>>
+TaskSystem::operator()(const std::vector<int> &indices) {
   std::vector<std::shared_ptr<Task>> newReady;
 
   // Completed tasks
@@ -122,7 +134,7 @@ bool TaskSystem::Run(const std::vector<int> &indices) {
 
   // Selected ready tasks
   for (const auto &index : indices) {
-    auto tau = std::move( _ready_tasks[index] );
+    auto tau = std::move(_ready_tasks[index]);
     if (tau->Step(true, _dt)) {
       newReady.emplace_back(tau);
     } else {
@@ -142,5 +154,6 @@ bool TaskSystem::Run(const std::vector<int> &indices) {
 
   // Move new ready tasks
   _ready_tasks = std::move(newReady);
-  return true;
+  _t += 1;
+  return this->operator()();
 }
