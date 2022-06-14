@@ -6,12 +6,12 @@
 #include "../includes/algorithms/PFair.hpp"
 
 int main() {
-  TaskSystem system(1);
-  system.AddTask(std::move(std::make_unique<Task>(TaskParameters{1, 2})));
-  system.AddTask(std::move(std::make_unique<Task>(TaskParameters{3, 6})));
-  // system.AddTask(std::move(std::make_unique<Task>(TaskParameters{1, 3})));
-  // system.AddTask(std::move(std::make_unique<Task>(TaskParameters{2, 9})));
-  // system.AddTask(std::move(std::make_unique<Task>(TaskParameters{2, 9})));
+  system.AddTask(TaskParameters{1, 2});
+  system.AddTask(TaskParameters{3, 6});
+
+  system.AddTask(TaskParameters{1, 3});
+  system.AddTask(TaskParameters{2, 9});
+  system.AddTask(TaskParameters{2, 9});
 
   TaskSystem systemSnapshot(std::move(system));
   system = std::move(systemSnapshot);

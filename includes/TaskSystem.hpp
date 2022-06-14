@@ -17,7 +17,7 @@ public:
   double Util() const { return _util; };
   void Reset();
   void Commit();
-  void AddTask(std::unique_ptr<Task> task);
+  void AddTask(TaskParameters params);
   const time_t T() const { return _t; }
   const time_t M() const { return _m; }
   const std::vector<std::pair<TaskParameters, TaskAttributes>>

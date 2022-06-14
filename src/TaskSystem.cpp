@@ -91,7 +91,8 @@ void TaskSystem::Reset() {
   _readyTasks = std::move(newReady);
 }
 
-void TaskSystem::AddTask(std::unique_ptr<Task> task) {
+void TaskSystem::AddTask(TaskParameters params) {
+  auto task = std::make_unique<Task>(params);
   _util += task->Util();
   assert(_util <= _m);
 
