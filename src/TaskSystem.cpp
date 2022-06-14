@@ -9,8 +9,8 @@ TaskSystem::TaskSystem(const TaskSystem &source) {
   _util = source._util;
   _dt = source._dt;
 
-  _ready_tasks = source._ready_tasks;
-  _completed_tasks = source._completed_tasks;
+  _readyTasks = source._readyTasks;
+  _completedTasks = source._completedTasks;
 }
 
 TaskSystem &TaskSystem::operator=(const TaskSystem &source) {
@@ -23,10 +23,10 @@ TaskSystem &TaskSystem::operator=(const TaskSystem &source) {
   _util = source._util;
   _dt = source._dt;
 
-  _ready_tasks.clear();
-  _completed_tasks.clear();
-  _ready_tasks = source._ready_tasks;
-  _completed_tasks = source._completed_tasks;
+  _readyTasks.clear();
+  _completedTasks.clear();
+  _readyTasks = source._readyTasks;
+  _completedTasks = source._completedTasks;
 
   return *this;
 }
@@ -37,8 +37,8 @@ TaskSystem::TaskSystem(TaskSystem &&source) {
   _util = source._util;
   _dt = source._dt;
 
-  _ready_tasks = std::move(source._ready_tasks);
-  _completed_tasks = std::move(source._completed_tasks);
+  _readyTasks = std::move(source._readyTasks);
+  _completedTasks = std::move(source._completedTasks);
 
   // Invalidate the source data
   source._m = 1;
@@ -57,10 +57,10 @@ TaskSystem &TaskSystem::operator=(TaskSystem &&source) {
   _util = source._util;
   _dt = source._dt;
 
-  _ready_tasks.clear();
-  _completed_tasks.clear();
-  _ready_tasks = std::move(source._ready_tasks);
-  _completed_tasks = std::move(source._completed_tasks);
+  _readyTasks.clear();
+  _completedTasks.clear();
+  _readyTasks = std::move(source._readyTasks);
+  _completedTasks = std::move(source._completedTasks);
 
   // Invalidate the source data
   source._m = 1;
@@ -77,18 +77,18 @@ void TaskSystem::Reset() {
   _t = 0;
 
   std::vector<std::shared_ptr<Task>> newReady;
-  for (auto &tau : _completed_tasks) {
+  for (auto &tau : _completedTasks) {
     tau->Reset();
     newReady.emplace_back(tau);
   }
 
-  for (auto &tau : _ready_tasks) {
+  for (auto &tau : _readyTasks) {
     tau->Reset();
     newReady.emplace_back(tau);
   }
 
   // Move new ready tasks
-  _ready_tasks = std::move(newReady);
+  _readyTasks = std::move(newReady);
 }
 
 void TaskSystem::AddTask(std::unique_ptr<Task> task) {
@@ -101,13 +101,13 @@ void TaskSystem::AddTask(std::unique_ptr<Task> task) {
                     [](const time_t &init, const time_t &first) {
                       return std::gcd(init, first);
                     });
-  _ready_tasks.emplace_back(std::move(task));
+  _readyTasks.emplace_back(std::move(task));
 }
 
 const std::vector<std::pair<TaskParameters, TaskAttributes>>
 TaskSystem::operator()() const {
   std::vector<std::pair<TaskParameters, TaskAttributes>> state;
-  std::transform(_ready_tasks.begin(), _ready_tasks.end(),
+  std::transform(_readyTasks.begin(), _readyTasks.end(),
                  std::back_inserter(state),
                  [](const std::shared_ptr<Task> &tau) {
                    return std::pair(tau->Parameters(), tau->Attributes());
@@ -121,39 +121,39 @@ TaskSystem::operator()(const std::vector<int> &indices) {
 
   // Completed tasks
   auto dt = _dt;
-  _completed_tasks.erase(std::remove_if(_completed_tasks.begin(),
-                                        _completed_tasks.end(),
-                                        [&newReady, dt](auto &tau) {
-                                          if (tau->Step(false, dt)) {
-                                            newReady.emplace_back(tau);
-                                            return true;
-                                          }
-                                          return false;
-                                        }),
-                         _completed_tasks.end());
+  _completedTasks.erase(std::remove_if(_completedTasks.begin(),
+                                       _completedTasks.end(),
+                                       [&newReady, dt](auto &tau) {
+                                         if (tau->Step(false, dt)) {
+                                           newReady.emplace_back(tau);
+                                           return true;
+                                         }
+                                         return false;
+                                       }),
+                        _completedTasks.end());
 
   // Selected ready tasks
   for (const auto &index : indices) {
-    auto tau = std::move(_ready_tasks[index]);
+    auto tau = std::move(_readyTasks[index]);
     if (tau->Step(true, _dt)) {
       newReady.emplace_back(tau);
     } else {
-      _completed_tasks.emplace_back(tau);
+      _completedTasks.emplace_back(tau);
     }
   }
-  _ready_tasks.erase(std::remove_if(_ready_tasks.begin(), _ready_tasks.end(),
-                                    [](auto &tau) { return tau == nullptr; }),
-                     _ready_tasks.end());
+  _readyTasks.erase(std::remove_if(_readyTasks.begin(), _readyTasks.end(),
+                                   [](auto &tau) { return tau == nullptr; }),
+                    _readyTasks.end());
 
   // New ready tasks
-  for (auto &tau : _ready_tasks) {
+  for (auto &tau : _readyTasks) {
     if (tau->Step(false, _dt)) {
       newReady.emplace_back(tau);
     }
   }
 
   // Move new ready tasks
-  _ready_tasks = std::move(newReady);
+  _readyTasks = std::move(newReady);
   _t += 1;
   return this->operator()();
 }

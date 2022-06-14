@@ -19,6 +19,7 @@ public:
   void Commit();
   void AddTask(std::unique_ptr<Task> task);
   const time_t T() const { return _t; }
+  const time_t M() const { return _m; }
   const std::vector<std::pair<TaskParameters, TaskAttributes>>
   operator()() const;
   const std::vector<std::pair<TaskParameters, TaskAttributes>>
@@ -27,8 +28,8 @@ public:
 private:
   int _m{1};
   double _util{0.0};
-  std::vector<std::shared_ptr<Task>> _completed_tasks;
-  std::vector<std::shared_ptr<Task>> _ready_tasks;
+  std::vector<std::shared_ptr<Task>> _completedTasks;
+  std::vector<std::shared_ptr<Task>> _readyTasks;
 
   time_t _t{0};
   time_t _dt{0};

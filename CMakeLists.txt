@@ -8,6 +8,6 @@ set(CMAKE_CXX_FLAG, "${CXX_FLAGS}")
 
 project(RTSSimulator)
 
-file(GLOB project_SRCS src/*.cpp)
+file(GLOB project_SRCS src/*.cpp src/*/*.cpp)
 
 add_executable(RTSSimulator ${project_SRCS})
