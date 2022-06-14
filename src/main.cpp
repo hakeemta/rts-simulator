@@ -6,6 +6,10 @@
 #include "../includes/algorithms/PFair.hpp"
 
 int main() {
+  std::vector<std::unique_ptr<Processor>> processors{};
+  processors.emplace_back(std::make_unique<Processor>());
+  TaskSystem system(std::move(processors));
+
   system.AddTask(TaskParameters{1, 2});
   system.AddTask(TaskParameters{3, 6});
 

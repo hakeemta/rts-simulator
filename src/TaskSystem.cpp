@@ -3,6 +3,19 @@
 #include <iostream>
 #include <numeric>
 
+TaskSystem::TaskSystem() {
+  std::vector<std::unique_ptr<Processor>> processors;
+  processors.emplace_back(std::make_unique<Processor>());
+  TaskSystem(std::move(processors));
+};
+
+TaskSystem::TaskSystem(std::vector<std::unique_ptr<Processor>> processors)
+    : _processors(std::move(processors)) {
+  for (const auto &proc : _processors) {
+    _m += proc->Capacity;
+  }
+};
+
 TaskSystem::TaskSystem(const TaskSystem &source) {
   _m = source._m;
   _t = source._t;

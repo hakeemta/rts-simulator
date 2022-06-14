@@ -4,10 +4,14 @@
 #include "Task.hpp"
 #include <vector>
 
+struct Processor {
+  int Capacity{1};
+};
+
 class TaskSystem {
 public:
-  TaskSystem(){};
-  TaskSystem(int m) : _m(m){};
+  TaskSystem();
+  TaskSystem(std::vector<std::unique_ptr<Processor>> processors);
   TaskSystem(const TaskSystem &source);
   TaskSystem &operator=(const TaskSystem &source);
   TaskSystem(TaskSystem &&source);
@@ -28,6 +32,7 @@ public:
 private:
   int _m{1};
   double _util{0.0};
+  std::vector<std::unique_ptr<Processor>> _processors;
   std::vector<std::shared_ptr<Task>> _completedTasks;
   std::vector<std::shared_ptr<Task>> _readyTasks;
 
