@@ -1,18 +1,13 @@
-#include "../includes/TaskSystem.hpp"
+#include "../include/TaskSystem.hpp"
 #include <algorithm>
 #include <iostream>
 #include <numeric>
 
-TaskSystem::TaskSystem() {
-  std::vector<std::unique_ptr<Processor>> processors;
-  processors.emplace_back(std::make_unique<Processor>());
-  TaskSystem(std::move(processors));
-};
+TaskSystem::TaskSystem() { TaskSystem(1); };
 
-TaskSystem::TaskSystem(std::vector<std::unique_ptr<Processor>> processors)
-    : _processors(std::move(processors)) {
-  for (const auto &proc : _processors) {
-    _m += proc->Capacity;
+TaskSystem::TaskSystem(int m) : _m(m) {
+  for (int i = 0; i < m; i++) {
+    _processors.emplace_back(std::make_unique<Processor>());
   }
 };
 
@@ -104,12 +99,12 @@ void TaskSystem::Reset() {
   _readyTasks = std::move(newReady);
 }
 
-void TaskSystem::AddTask(TaskParameters params) {
+void TaskSystem::AddTask(Task::Parameters params) {
   auto task = std::make_unique<Task>(params);
   _util += task->Util();
   assert(_util <= _m);
 
-  TaskParameters p = task->Parameters();
+  Task::Parameters p = task->Params();
   std::vector<time_t> v{p.C, p.D, p.T};
   _dt = std::reduce(v.begin(), v.end(), _dt,
                     [](const time_t &init, const time_t &first) {
@@ -118,18 +113,18 @@ void TaskSystem::AddTask(TaskParameters params) {
   _readyTasks.emplace_back(std::move(task));
 }
 
-const std::vector<std::pair<TaskParameters, TaskAttributes>>
+const std::vector<std::pair<Task::Parameters, Task::Attributes>>
 TaskSystem::operator()() const {
-  std::vector<std::pair<TaskParameters, TaskAttributes>> state;
+  std::vector<std::pair<Task::Parameters, Task::Attributes>> state;
   std::transform(_readyTasks.begin(), _readyTasks.end(),
                  std::back_inserter(state),
                  [](const std::shared_ptr<Task> &tau) {
-                   return std::pair(tau->Parameters(), tau->Attributes());
+                   return std::pair(tau->Params(), tau->Attrs());
                  });
   return state;
 };
 
-const std::vector<std::pair<TaskParameters, TaskAttributes>>
+const std::vector<std::pair<Task::Parameters, Task::Attributes>>
 TaskSystem::operator()(const std::vector<int> &indices) {
   std::vector<std::shared_ptr<Task>> newReady;
 

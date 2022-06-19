@@ -1,33 +1,34 @@
 #include <iostream>
 #include <vector>
 
-#include "../../includes/Task.hpp"
-#include "../../includes/algorithms/PFair.hpp"
+#include "../../include/Task.hpp"
+#include "../../include/algorithms/PFair.hpp"
 
 namespace PFair {
-double computeLag(time_t t, const TaskParameters &params,
-                  const TaskAttributes &attrs) {
+double computeLag(time_t t, const Task::Parameters &params,
+                  const Task::Attributes &attrs) {
   return Lag(t, params.C, attrs.Ct, params.U, attrs.releases);
 }
 
-double computeLag(const TaskParameters &params, const TaskAttributes &attrs) {
+double computeLag(const Task::Parameters &params,
+                  const Task::Attributes &attrs) {
   time_t t = params.D - attrs.Dt;
   return Lag(t, params.C, attrs.Ct, params.U, 1);
 };
 
-int getSymbol(time_t t, const TaskParameters &params,
-              const TaskAttributes &attrs) {
+int getSymbol(time_t t, const Task::Parameters &params,
+              const Task::Attributes &attrs) {
   return Symbol(t, params.C, params.U);
 }
 
-int getSymbol(const TaskParameters &params, const TaskAttributes &attrs) {
+int getSymbol(const Task::Parameters &params, const Task::Attributes &attrs) {
   time_t t = params.D - attrs.Dt;
   return Symbol(t, params.C, params.U);
 }
 
 std::vector<int>
 PF(time_t t, const int &m,
-   const std::vector<std::pair<TaskParameters, TaskAttributes>> &states) {
+   const std::vector<std::pair<Task::Parameters, Task::Attributes>> &states) {
   std::vector<int> indices;
   std::vector<int> contendingIndices;
 
