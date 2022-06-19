@@ -11,7 +11,7 @@ struct Processor {
 class TaskSystem {
 public:
   TaskSystem();
-  TaskSystem(std::vector<std::unique_ptr<Processor>> processors);
+  TaskSystem(int m);
   TaskSystem(const TaskSystem &source);
   TaskSystem &operator=(const TaskSystem &source);
   TaskSystem(TaskSystem &&source);
@@ -21,12 +21,12 @@ public:
   double Util() const { return _util; };
   void Reset();
   void Commit();
-  void AddTask(TaskParameters params);
+  void AddTask(Task::Parameters params);
   const time_t T() const { return _t; }
   const time_t M() const { return _m; }
-  const std::vector<std::pair<TaskParameters, TaskAttributes>>
+  const std::vector<std::pair<Task::Parameters, Task::Attributes>>
   operator()() const;
-  const std::vector<std::pair<TaskParameters, TaskAttributes>>
+  const std::vector<std::pair<Task::Parameters, Task::Attributes>>
   operator()(const std::vector<int> &indices);
 
 private:

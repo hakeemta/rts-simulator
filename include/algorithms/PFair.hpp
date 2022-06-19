@@ -17,19 +17,20 @@ auto Symbol = [](time_t t, time_t C, double U) {
   return Sgn(value);
 };
 
-double computeLag(time_t t, const TaskParameters &params,
-                  const TaskAttributes &attrs);
+double computeLag(time_t t, const Task::Parameters &params,
+                  const Task::Attributes &attrs);
 
-double computeLag(const TaskParameters &params, const TaskAttributes &attrs);
+double computeLag(const Task::Parameters &params,
+                  const Task::Attributes &attrs);
 
-int getSymbol(time_t t, const TaskParameters &params,
-              const TaskAttributes &attrs);
+int getSymbol(time_t t, const Task::Parameters &params,
+              const Task::Attributes &attrs);
 
-int getSymbol(const TaskParameters &params, const TaskAttributes &attrs);
+int getSymbol(const Task::Parameters &params, const Task::Attributes &attrs);
 
 std::vector<int>
 PF(time_t t, const int &m,
-   const std::vector<std::pair<TaskParameters, TaskAttributes>> &states);
+   const std::vector<std::pair<Task::Parameters, Task::Attributes>> &states);
 }; // namespace PFair
 
 #endif

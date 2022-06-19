@@ -2,20 +2,18 @@
 #include <iostream>
 #include <vector>
 
-#include "../includes/TaskSystem.hpp"
-#include "../includes/algorithms/PFair.hpp"
+#include "TaskSystem.hpp"
+#include "algorithms/PFair.hpp"
 
 int main() {
-  std::vector<std::unique_ptr<Processor>> processors{};
-  processors.emplace_back(std::make_unique<Processor>());
-  TaskSystem system(std::move(processors));
+  TaskSystem system(2);
 
-  system.AddTask(TaskParameters{1, 2});
-  system.AddTask(TaskParameters{3, 6});
+  system.AddTask(Task::Parameters{1, 2});
+  system.AddTask(Task::Parameters{3, 6});
 
-  system.AddTask(TaskParameters{1, 3});
-  system.AddTask(TaskParameters{2, 9});
-  system.AddTask(TaskParameters{2, 9});
+  system.AddTask(Task::Parameters{1, 3});
+  system.AddTask(Task::Parameters{2, 9});
+  system.AddTask(Task::Parameters{2, 9});
 
   TaskSystem systemSnapshot(std::move(system));
   system = std::move(systemSnapshot);

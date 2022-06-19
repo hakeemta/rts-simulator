@@ -1,9 +1,9 @@
-#include "../includes/Task.hpp"
+#include "../include/Task.hpp"
 #include <cassert>
 #include <stdexcept>
 #include <vector>
 
-Task::Task(TaskParameters params) : _params(params) {
+Task::Task(Task::Parameters params) : _params(params) {
   assert(_params.U <= 1.0);
   Reset();
 }
@@ -24,18 +24,18 @@ void Task::Reset(bool start) {
     _attrs.releases = 1;
   }
 
-  _status = TaskStatus::IDLE;
+  _status = Task::Status::IDLE;
   _Update();
 }
 
 bool Task::Ready() {
-  return (_status == TaskStatus::IDLE) || (_status == TaskStatus::RUNNING);
+  return (_status == Task::Status::IDLE) || (_status == Task::Status::RUNNING);
 }
 
 bool Task::Step(bool selected, time_t delta) {
   if (!selected) {
-    if (_status == TaskStatus::RUNNING) {
-      _status = TaskStatus::IDLE;
+    if (_status == Task::Status::RUNNING) {
+      _status = Task::Status::IDLE;
     }
   } else {
     if (!Ready()) {
@@ -43,7 +43,7 @@ bool Task::Step(bool selected, time_t delta) {
     }
 
     _attrs.Ct -= delta;
-    _status = _attrs.Ct > 0 ? TaskStatus::RUNNING : TaskStatus::COMPLETED;
+    _status = _attrs.Ct > 0 ? Task::Status::RUNNING : Task::Status::COMPLETED;
   }
 
   _t += delta;
