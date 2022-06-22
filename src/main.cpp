@@ -14,6 +14,7 @@ int main() {
   system.AddTask(Task::Parameters{1, 3});
   system.AddTask(Task::Parameters{2, 9});
   system.AddTask(Task::Parameters{2, 9});
+  system.AddTask(Task::Parameters{2, 9});
 
   TaskSystem systemSnapshot(std::move(system));
   system = std::move(systemSnapshot);

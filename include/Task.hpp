@@ -34,6 +34,7 @@ public:
   void Reset(bool start = true);
   const Parameters Params() const { return _params; };
   const Attributes Attrs() const { return _attrs; };
+
   bool Ready();
   bool Step(bool selected = false, time_t delta = 1);
 
