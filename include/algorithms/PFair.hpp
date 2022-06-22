@@ -1,6 +1,7 @@
 #ifndef PFAIR_HPP
 #define PFAIR_HPP
 
+#include <Task.hpp>
 #include <cmath>
 #include <iostream>
 #include <vector>
