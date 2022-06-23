@@ -11,14 +11,19 @@ TaskSystem::TaskSystem(int m) : _m(m) {
   }
 };
 
+void TaskSystem::_DeepCopy(const Tasks &src, Tasks &dst) {
+  std::transform(src.begin(), src.end(), std::back_inserter(dst),
+                 [](const auto &tau) { return std::make_unique<Task>(*tau); });
+}
+
 TaskSystem::TaskSystem(const TaskSystem &source) {
   _m = source._m;
   _t = source._t;
   _util = source._util;
   _dt = source._dt;
 
-  _ready = source._ready;
-  _completed = source._completed;
+  _DeepCopy(source._ready, _ready);
+  _DeepCopy(source._completed, _completed);
 }
 
 TaskSystem &TaskSystem::operator=(const TaskSystem &source) {
@@ -31,12 +36,19 @@ TaskSystem &TaskSystem::operator=(const TaskSystem &source) {
   _util = source._util;
   _dt = source._dt;
 
-  _ready.clear();
-  _completed.clear();
-  _ready = source._ready;
-  _completed = source._completed;
+  // _ready.clear();
+  // _completed.clear();
+  _DeepCopy(source._ready, _ready);
+  _DeepCopy(source._completed, _completed);
 
   return *this;
+}
+
+void TaskSystem::_Invalidate() {
+  _m = 1;
+  _t = 0;
+  _util = 0;
+  _dt = 0;
 }
 
 TaskSystem::TaskSystem(TaskSystem &&source) {
@@ -49,10 +61,7 @@ TaskSystem::TaskSystem(TaskSystem &&source) {
   _completed = std::move(source._completed);
 
   // Invalidate the source data
-  source._m = 1;
-  source._t = 0;
-  source._util = 0;
-  source._dt = 0;
+  source._Invalidate();
 }
 
 TaskSystem &TaskSystem::operator=(TaskSystem &&source) {
@@ -65,16 +74,11 @@ TaskSystem &TaskSystem::operator=(TaskSystem &&source) {
   _util = source._util;
   _dt = source._dt;
 
-  _ready.clear();
-  _completed.clear();
   _ready = std::move(source._ready);
   _completed = std::move(source._completed);
 
   // Invalidate the source data
-  source._m = 1;
-  source._t = 0;
-  source._util = 0;
-  source._dt = 0;
+  source._Invalidate();
 
   return *this;
 }
@@ -97,27 +101,24 @@ void TaskSystem::AddTask(Task::Parameters params) {
 
 void TaskSystem::Reset() {
   _t = 0;
-
-  std::vector<std::shared_ptr<Task>> newReady;
-  for (auto &tau : _completed) {
-    tau->Reset();
-    newReady.emplace_back(tau);
-  }
+  Tasks newReady = std::move(_completed);
 
   for (auto &tau : _ready) {
+    newReady.emplace_back(std::move(tau));
+  }
+
+  for (auto &tau : newReady) {
     tau->Reset();
-    newReady.emplace_back(tau);
   }
 
   // Move new ready tasks
   _ready = std::move(newReady);
 }
 
-const States
-TaskSystem::_GetStates(const std::vector<std::shared_ptr<Task>> _tasks) const {
+const States TaskSystem::_GetStates(const Tasks &_tasks) const {
   States states;
   std::transform(_tasks.begin(), _tasks.end(), std::back_inserter(states),
-                 [](const std::shared_ptr<Task> &tau) {
+                 [](const std::unique_ptr<Task> &tau) {
                    return std::pair(tau->Params(), tau->Attrs());
                  });
   return states;
@@ -125,17 +126,17 @@ TaskSystem::_GetStates(const std::vector<std::shared_ptr<Task>> _tasks) const {
 
 const States TaskSystem::operator()() const { return _GetStates(_ready); };
 
-const States TaskSystem::Context() const { return _GetStates(_completed); }
+const States TaskSystem::Completed() const { return _GetStates(_completed); }
 
 const States TaskSystem::operator()(const std::vector<int> &indices) {
-  std::vector<std::shared_ptr<Task>> newReady;
+  Tasks newReady;
 
   // Completed tasks
   auto dt = _dt;
   _completed.erase(std::remove_if(_completed.begin(), _completed.end(),
                                   [&newReady, dt](auto &tau) {
                                     if (tau->Step(false, dt)) {
-                                      newReady.emplace_back(tau);
+                                      newReady.emplace_back(std::move(tau));
                                       return true;
                                     }
                                     return false;
@@ -144,11 +145,11 @@ const States TaskSystem::operator()(const std::vector<int> &indices) {
 
   // Selected ready tasks
   for (const auto &index : indices) {
-    auto tau = std::move(_ready[index]);
+    auto &tau = _ready[index];
     if (tau->Step(true, _dt)) {
-      newReady.emplace_back(tau);
+      newReady.emplace_back(std::move(tau));
     } else {
-      _completed.emplace_back(tau);
+      _completed.emplace_back(std::move(tau));
     }
   }
   _ready.erase(std::remove_if(_ready.begin(), _ready.end(),
@@ -158,7 +159,7 @@ const States TaskSystem::operator()(const std::vector<int> &indices) {
   // New ready tasks
   for (auto &tau : _ready) {
     if (tau->Step(false, _dt)) {
-      newReady.emplace_back(tau);
+      newReady.emplace_back(std::move(tau));
     }
   }
 

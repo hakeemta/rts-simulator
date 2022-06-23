@@ -32,8 +32,8 @@ public:
   Task(Parameters params);
   double Util() const { return _params.U; };
   void Reset(bool start = true);
-  const Parameters Params() const { return _params; };
-  const Attributes Attrs() const { return _attrs; };
+  const Parameters &Params() const { return _params; };
+  const Attributes &Attrs() const { return _attrs; };
 
   bool Ready();
   bool Step(bool selected = false, time_t delta = 1);
@@ -44,7 +44,7 @@ private:
   Attributes _attrs;
   Status _status{Status::IDLE};
 
-  void _Update(bool reset = true);
+  void _Update(bool reload = true);
 };
 
 #endif
