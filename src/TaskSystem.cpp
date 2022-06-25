@@ -16,34 +16,34 @@ time_t Timer::synchronize(const time_t next) {
   return _value;
 }
 
-template <class T> void Pool<T>::copy(const Pool<T> &source) {
-  std::lock_guard<std::mutex> lock(_mutex);
-  std::transform(source._entities.begin(), source._entities.end(),
-                 std::back_inserter(_entities), [](const auto &entity) {
-                   return std::make_unique<T>(*entity);
-                 });
-}
+// template <class T> void Pool<T>::copy(const Pool<T> &source) {
+//   std::lock_guard<std::mutex> lock(_mutex);
+//   std::transform(source._entities.begin(), source._entities.end(),
+//                  std::back_inserter(_entities), [](const auto &entity) {
+//                    return std::make_unique<T>(*entity);
+//                  });
+// }
 
-template <class T> Pool<T>::Pool(const Pool<T> &source) { copy(source); }
+// template <class T> Pool<T>::Pool(const Pool<T> &source) { copy(source); }
 
-template <class T> Pool<T> &Pool<T>::operator=(const Pool<T> &source) {
-  std::lock_guard<std::mutex> lock(_mutex);
-  copy(source);
-  return *this;
-}
+// template <class T> Pool<T> &Pool<T>::operator=(const Pool<T> &source) {
+//   std::lock_guard<std::mutex> lock(_mutex);
+//   copy(source);
+//   return *this;
+// }
 
-template <class T> Pool<T>::Pool(Pool<T> &&source) {
-  _entities = std::move(source._entities);
-}
+// template <class T> Pool<T>::Pool(Pool<T> &&source) {
+//   _entities = std::move(source._entities);
+// }
 
-template <class T> Pool<T> &Pool<T>::operator=(Pool<T> &&source) {
-  std::lock_guard<std::mutex> lock(_mutex);
-  _entities = std::move(source._entities);
-  return *this;
-}
+// template <class T> Pool<T> &Pool<T>::operator=(Pool<T> &&source) {
+//   std::lock_guard<std::mutex> lock(_mutex);
+//   _entities = std::move(source._entities);
+//   return *this;
+// }
 
 template <class T> int Pool<T>::size() {
-  std::lock_guard<std::mutex> lock(_mutex);
+  // std::lock_guard<std::mutex> lock(_mutex);
   return _entities.size();
 }
 
@@ -53,12 +53,12 @@ template <class T> void Pool<T>::add(std::shared_ptr<T> entity) {
 }
 
 template <class T> std::shared_ptr<T> &Pool<T>::operator[](int index) {
-  std::lock_guard<std::mutex> lock(_mutex);
+  // std::lock_guard<std::mutex> lock(_mutex);
   return _entities[index];
 }
 
 template <class T> void Pool<T>::refresh() {
-  std::lock_guard<std::mutex> lock(_mutex);
+  // std::lock_guard<std::mutex> lock(_mutex);
   _entities.erase(
       std::remove_if(_entities.begin(), _entities.end(),
                      [](auto &entity) { return entity == nullptr; }),
@@ -73,37 +73,37 @@ TaskSystem::TaskSystem(int m) : _m(m) {
   }
 };
 
-TaskSystem::TaskSystem(const TaskSystem &source) {
-  _m = source._m;
-  _t = source._t;
-  _util = source._util;
-  _dt = source._dt;
+// TaskSystem::TaskSystem(const TaskSystem &source) {
+//   _m = source._m;
+//   _t = source._t;
+//   _util = source._util;
+//   _dt = source._dt;
 
-  _ready = source._ready;
-  _running = source._running;
-  _completed = source._completed;
+//   _ready = source._ready;
+//   _running = source._running;
+//   _completed = source._completed;
 
-  _processors = source._processors;
-}
+//   _processors = source._processors;
+// }
 
-TaskSystem &TaskSystem::operator=(const TaskSystem &source) {
-  if (this == &source) {
-    return *this;
-  }
+// TaskSystem &TaskSystem::operator=(const TaskSystem &source) {
+//   if (this == &source) {
+//     return *this;
+//   }
 
-  _m = source._m;
-  _t = source._t;
-  _util = source._util;
-  _dt = source._dt;
+//   _m = source._m;
+//   _t = source._t;
+//   _util = source._util;
+//   _dt = source._dt;
 
-  _ready = source._ready;
-  _running = source._running;
-  _completed = source._completed;
+//   _ready = source._ready;
+//   _running = source._running;
+//   _completed = source._completed;
 
-  _processors = source._processors;
+//   _processors = source._processors;
 
-  return *this;
-}
+//   return *this;
+// }
 
 void TaskSystem::invalidate() {
   _m = 1;
@@ -112,43 +112,43 @@ void TaskSystem::invalidate() {
   _dt = 0;
 }
 
-TaskSystem::TaskSystem(TaskSystem &&source) {
-  _m = source._m;
-  _t = source._t;
-  _util = source._util;
-  _dt = source._dt;
+// TaskSystem::TaskSystem(TaskSystem &&source) {
+//   _m = source._m;
+//   _t = source._t;
+//   _util = source._util;
+//   _dt = source._dt;
 
-  _ready = std::move(source._ready);
-  _running = std::move(source._running);
-  _completed = std::move(source._completed);
+//   _ready = std::move(source._ready);
+//   _running = std::move(source._running);
+//   _completed = std::move(source._completed);
 
-  _processors = std::move(source._processors);
+//   _processors = std::move(source._processors);
 
-  // Invalidate the source data
-  source.invalidate();
-}
+//   // Invalidate the source data
+//   source.invalidate();
+// }
 
-TaskSystem &TaskSystem::operator=(TaskSystem &&source) {
-  if (this == &source) {
-    return *this;
-  }
+// TaskSystem &TaskSystem::operator=(TaskSystem &&source) {
+//   if (this == &source) {
+//     return *this;
+//   }
 
-  _m = source._m;
-  _t = source._t;
-  _util = source._util;
-  _dt = source._dt;
+//   _m = source._m;
+//   _t = source._t;
+//   _util = source._util;
+//   _dt = source._dt;
 
-  _ready = std::move(source._ready);
-  _running = std::move(source._running);
-  _completed = std::move(source._completed);
+//   _ready = std::move(source._ready);
+//   _running = std::move(source._running);
+//   _completed = std::move(source._completed);
 
-  _processors = std::move(source._processors);
+//   _processors = std::move(source._processors);
 
-  // Invalidate the source data
-  source.invalidate();
+//   // Invalidate the source data
+//   source.invalidate();
 
-  return *this;
-}
+//   return *this;
+// }
 
 void TaskSystem::addTask(Task::Parameters params) {
   auto task = std::make_unique<Task>(params);
@@ -162,36 +162,32 @@ void TaskSystem::addTask(Task::Parameters params) {
                     [](const time_t &init, const time_t &first) {
                       return std::gcd(init, first);
                     });
+  
+  task->linkSystem(shared_from_this());
   _ready.add(std::move(task));
 }
 
 void TaskSystem::reset() {
   _t = 0;
-  Pool<Task> newReady;
 
   for (int i = 0; i < _ready.size(); i++) {
     auto &task = _ready[i];
     task->reset();
-    newReady.add(std::move(task));
   }
-  _ready.refresh();
 
   for (int i = 0; i < _running.size(); i++) {
     auto &task = _running[i];
     task->reset();
-    newReady.add(std::move(task));
+    _ready.add(std::move(task));
   }
   _running.refresh();
 
   for (int i = 0; i < _completed.size(); i++) {
     auto &task = _completed[i];
     task->reset();
-    newReady.add(std::move(task));
+    _ready.add(std::move(task));
   }
   _completed.refresh();
-
-  // Move new ready tasks
-  _ready = std::move(newReady);
 }
 
 void TaskSystem::syncTime(const time_t next) { _timer.synchronize(next); }

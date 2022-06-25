@@ -48,6 +48,7 @@ public:
   bool ready();
   void allocate(std::shared_ptr<Processor> processor = nullptr,
                 time_t delta = 1);
+  void linkSystem(std::shared_ptr<TaskSystem> system) { _system = system; };
   void simulate();
 
   std::shared_ptr<Task> getShared() { return shared_from_this(); }

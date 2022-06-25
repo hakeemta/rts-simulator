@@ -5,6 +5,7 @@
 #include <Task.hpp>
 #include <condition_variable>
 #include <mutex>
+#include <memory>
 #include <vector>
 
 using States = std::vector<std::pair<Task::Parameters, Task::Attributes>>;
@@ -25,10 +26,10 @@ private:
 template <class T> class Pool {
 public:
   Pool(){};
-  Pool(const Pool<T> &source);
-  Pool<T> &operator=(const Pool<T> &source);
-  Pool(Pool<T> &&source);
-  Pool<T> &operator=(Pool<T> &&source);
+  // Pool(const Pool<T> &source);
+  // Pool<T> &operator=(const Pool<T> &source);
+  // Pool(Pool<T> &&source);
+  // Pool<T> &operator=(Pool<T> &&source);
   ~Pool(){};
 
   int size();
@@ -41,17 +42,17 @@ private:
   std::mutex _mutex;
   std::vector<std::shared_ptr<T>> _entities;
 
-  void copy(const Pool<T> &source);
+  // void copy(const Pool<T> &source);
 };
 
-class TaskSystem {
+class TaskSystem : public std::enable_shared_from_this<TaskSystem> {
 public:
   TaskSystem();
   TaskSystem(int m);
-  TaskSystem(const TaskSystem &source);
-  TaskSystem &operator=(const TaskSystem &source);
-  TaskSystem(TaskSystem &&source);
-  TaskSystem &operator=(TaskSystem &&source);
+  // TaskSystem(const TaskSystem &source);
+  // TaskSystem &operator=(const TaskSystem &source);
+  // TaskSystem(TaskSystem &&source);
+  // TaskSystem &operator=(TaskSystem &&source);
   ~TaskSystem(){};
 
   void addTask(Task::Parameters params);

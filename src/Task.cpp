@@ -17,8 +17,8 @@ Task::Task(Parameters params) : _params(params) {
 }
 
 Task::~Task() {
-  // std::for_each(_threads.begin(), _threads.end(),
-  //               [](std::thread &t) { t.join(); });
+  std::for_each(_threads.begin(), _threads.end(),
+                [](std::thread &t) { t.join(); });
 }
 
 void Task::reset(bool start) {
@@ -75,17 +75,17 @@ void Task::step() {
     reset(false);
   }
 
-  // Release resources
-  if (_processor != nullptr) {
-    _system->addToProcessors(std::move(_processor));
-  }
-  if (_status == Status::COMPLETED) {
-    // Add to completed
-    _system->addToCompleted(std::move(shared_from_this()));
-  } else {
-    // Add to ready
-    _system->addToReady(std::move(shared_from_this()));
-  }
+  // // Release resources
+  // if (_processor != nullptr) {
+  //   _system->addToProcessors(std::move(_processor));
+  // }
+  // if (_status == Status::COMPLETED) {
+  //   // Add to completed
+  //   _system->addToCompleted(std::move(shared_from_this()));
+  // } else {
+  //   // Add to ready
+  //   _system->addToReady(std::move(shared_from_this()));
+  // }
 }
 
 void Task::update(bool reload) {
