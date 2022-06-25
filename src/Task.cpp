@@ -17,8 +17,11 @@ Task::Task(Parameters params) : _params(params) {
 }
 
 Task::~Task() {
-  std::for_each(_threads.begin(), _threads.end(),
-                [](std::thread &t) { t.join(); });
+  // std::for_each(_threads.begin(), _threads.end(),
+  //               [](std::thread &t) { t.join(); });
+  if(_thread != nullptr) {
+    _thread->join();
+  }
 }
 
 void Task::reset(bool start) {
@@ -58,13 +61,19 @@ void Task::step() {
     throw std::out_of_range("Task deadline miss");
   }
 
-  auto ftr = std::async(&TaskSystem::syncTime, _system, _t);
-  // Wait to sync. the elapsed time
-  ftr.wait();
-
   std::unique_lock<std::mutex> lck(_mutex);
   std::cout << _id << " stepped for " << _delta << std::endl;
   lck.unlock();
+
+  // auto ftr = std::async(std::launch::async, &TaskSystem::syncTime, _system, _t);
+  // // Wait to sync. the elapsed time
+  // ftr.wait();
+  _system->syncTime(_t);
+
+  // Release resources
+  if(_thread != nullptr) {
+    _system->releaseThread(std::move(_thread));
+  }
 
   // Add processor to the pool
   _delta = 1;
@@ -75,17 +84,16 @@ void Task::step() {
     reset(false);
   }
 
-  // // Release resources
-  // if (_processor != nullptr) {
-  //   _system->addToProcessors(std::move(_processor));
-  // }
-  // if (_status == Status::COMPLETED) {
-  //   // Add to completed
-  //   _system->addToCompleted(std::move(shared_from_this()));
-  // } else {
-  //   // Add to ready
-  //   _system->addToReady(std::move(shared_from_this()));
-  // }
+  if (_processor != nullptr) {
+    _system->returnProcessor(std::move(_processor));
+  }
+  if (_status == Status::COMPLETED) {
+    // Add to completed
+    _system->addToCompleted(std::move(shared_from_this()));
+  } else {
+    // Add to ready
+    _system->addToReady(std::move(shared_from_this()));
+  }
 }
 
 void Task::update(bool reload) {
@@ -104,6 +112,5 @@ void Task::allocate(std::shared_ptr<Processor> processor, time_t delta) {
 }
 
 void Task::simulate() {
-  _threads.emplace_back(std::thread(&Task::step, this));
-  int i = 0;
+  _thread = std::make_unique<std::thread>(&Task::step, shared_from_this());
 }

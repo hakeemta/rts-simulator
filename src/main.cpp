@@ -24,15 +24,14 @@ int main() {
 
   std::cout << "Total Util.: " << system->Util() << std::endl;
 
-  system->start();
   auto states = system->operator()();
   int m = system->M();
   time_t t = 0;
-  for (int i = 0; i < 1800; i++) {
-    if (i != 0 && i % 200 == 0) {
-      system->reset();
-      states = system->operator()();
-    }
+  for (int i = 0; i < 18; i++) {
+    // if (i != 0 && i % 200 == 0) {
+    //   system->reset();
+    //   states = system->operator()();
+    // }
 
     t = system->T();
     auto indices = PFair::PF(t, m, states);

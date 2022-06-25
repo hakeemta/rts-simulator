@@ -14,7 +14,7 @@ using States = std::vector<std::pair<Task::Parameters, Task::Attributes>>;
 class Timer {
 public:
   void increment(time_t delta);
-  time_t synchronize(const time_t previous = 0);
+  void synchronize(const time_t previous = 0);
 
 private:
   time_t _value{0};
@@ -61,14 +61,14 @@ public:
   const time_t T() const { return _t; }
   void reset();
   void syncTime(const time_t previous);
-  void start();
   const States operator()();
   const States Completed();
   const States operator()(const std::vector<int> &indices);
 
   void addToReady(std::shared_ptr<Task> task);
   void addToCompleted(std::shared_ptr<Task> task);
-  void addToProcessors(std::shared_ptr<Processor> processor);
+  void returnProcessor(std::shared_ptr<Processor> processor);
+  void releaseThread(std::unique_ptr<std::thread> thread);
 
 private:
   int _m{1};
@@ -79,6 +79,8 @@ private:
   Pool<Task> _ready;
   Pool<Task> _running;
   Pool<Task> _completed;
+  Pool<std::thread> _threads;
+  // std::vector<std::unique_ptr<std::thread>> _threads;
 
   time_t _t{0};
   time_t _dt{0};

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <numeric>
 #include <thread>
+#include <chrono>
 
 void Timer::increment(time_t delta) {
   std::lock_guard<std::mutex> lock(_mutex);
@@ -10,10 +11,9 @@ void Timer::increment(time_t delta) {
   _condition.notify_all();
 }
 
-time_t Timer::synchronize(const time_t next) {
+void Timer::synchronize(const time_t next) {
   std::unique_lock<std::mutex> lock(_mutex);
   _condition.wait(lock, [this, &next] { return _value == next; });
-  return _value;
 }
 
 // template <class T> void Pool<T>::copy(const Pool<T> &source) {
@@ -192,13 +192,6 @@ void TaskSystem::reset() {
 
 void TaskSystem::syncTime(const time_t next) { _timer.synchronize(next); }
 
-void TaskSystem::start() {
-  for (int i = 0; i < _ready.size(); i++) {
-    auto &task = _ready[i];
-    task->simulate();
-  }
-}
-
 const States TaskSystem::getStates(Pool<Task> &tasks) const {
   States states;
 
@@ -221,22 +214,26 @@ void TaskSystem::addToCompleted(std::shared_ptr<Task> task) {
   _completed.add(std::move(task));
 }
 
-void TaskSystem::addToProcessors(std::shared_ptr<Processor> processor) {
+void TaskSystem::returnProcessor(std::shared_ptr<Processor> processor) {
   _processors.add(std::move(processor));
+}
+
+void TaskSystem::releaseThread(std::unique_ptr<std::thread> thread) {
+  _threads.add(std::move(thread));
 }
 
 const States TaskSystem::operator()(const std::vector<int> &indices) {
   // Selected ready tasks
   for (int k = 0; k < indices.size(); k++) {
     const auto &index = indices[k];
-    auto &task = _ready[index];
+    auto task = std::move(_ready[index]);
     auto &proc = _processors[k];
 
     std::cout << task->getId() << " SELECTED to run on " << proc->getId()
               << " for " << _dt << std::endl;
 
     task->allocate(std::move(proc), _dt);
-    _running.add(std::move(task));
+    task->simulate();
   }
 
   // Purge null (allocated) tasks with corresponding processors
@@ -245,19 +242,31 @@ const States TaskSystem::operator()(const std::vector<int> &indices) {
 
   // Step unselected and previously completed tasks
   for (int i = 0; i < _ready.size(); i++) {
-    _ready[i]->allocate(nullptr, _dt);
+    auto task = std::move(_ready[i]);
+    task->allocate(nullptr, _dt);
+    task->simulate();
   }
+  _ready.refresh();
   for (int i = 0; i < _completed.size(); i++) {
-    _completed[i]->allocate(nullptr, _dt);
+    auto task = std::move(_completed[i]);
+    task->allocate(nullptr, _dt);
+    task->simulate();
   }
+  _completed.refresh();
 
   _t += _dt;
   // Sync time
   _timer.increment(_dt);
-  for (int i = 0; i < _n; i++) {
-    std::this_thread::yield(); // Hopefully wait for other ready/awaken threads
-                               // to run first
+
+  // Hopefully wait for other ready/awaken threads to run first
+  std::this_thread::sleep_for(std::chrono::milliseconds(1));
+  // std::this_thread::yield();
+
+  for(int i = 0; i < _threads.size(); i++) {
+    auto thread = std::move(_threads[i]);
+    thread->join();
   }
+  _threads.refresh();
 
   return this->operator()();
 }

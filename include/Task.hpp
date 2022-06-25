@@ -69,7 +69,7 @@ private:
   static std::mutex _mutex; // Shared by all tasks for protecting cout
   int _id;
   static int _idCount; // global variable for counting task object ids
-  std::vector<std::thread> _threads;
+  std::unique_ptr<std::thread> _thread;
 };
 
 #endif
