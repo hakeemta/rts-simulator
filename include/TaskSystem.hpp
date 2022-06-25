@@ -1,14 +1,47 @@
 #ifndef TASK_SYSTEM_HPP
 #define TASK_SYSTEM_HPP
 
-#include "Task.hpp"
+#include <Processor.hpp>
+#include <Task.hpp>
+#include <condition_variable>
+#include <mutex>
 #include <vector>
 
 using States = std::vector<std::pair<Task::Parameters, Task::Attributes>>;
-using Tasks = std::vector<std::unique_ptr<Task>>;
 
-struct Processor {
-  int Capacity{1};
+// Auxiliary class to set and access global time in a thread-safe manner
+class Timer {
+public:
+  void increment(time_t delta);
+  time_t synchronize(const time_t previous = 0);
+
+private:
+  time_t _value{0};
+  std::mutex _mutex;
+  std::condition_variable _condition;
+};
+
+// Auxiliary class to manage entities in a thread-safe manner
+template <class T> class Pool {
+public:
+  Pool(){};
+  Pool(const Pool<T> &source);
+  Pool<T> &operator=(const Pool<T> &source);
+  Pool(Pool<T> &&source);
+  Pool<T> &operator=(Pool<T> &&source);
+  ~Pool(){};
+
+  int size();
+  void add(std::shared_ptr<T> entity);
+  std::shared_ptr<T> extract(int index);
+  std::shared_ptr<T> &operator[](int index);
+  void refresh();
+
+private:
+  std::mutex _mutex;
+  std::vector<std::shared_ptr<T>> _entities;
+
+  void copy(const Pool<T> &source);
 };
 
 class TaskSystem {
@@ -19,30 +52,39 @@ public:
   TaskSystem &operator=(const TaskSystem &source);
   TaskSystem(TaskSystem &&source);
   TaskSystem &operator=(TaskSystem &&source);
-  ~TaskSystem();
+  ~TaskSystem(){};
 
-  void AddTask(Task::Parameters params);
+  void addTask(Task::Parameters params);
   double Util() const { return _util; };
   const time_t M() const { return _m; }
   const time_t T() const { return _t; }
-  void Reset();
-  const States operator()() const;
-  const States Completed() const;
+  void reset();
+  void syncTime(const time_t previous);
+  void start();
+  const States operator()();
+  const States Completed();
   const States operator()(const std::vector<int> &indices);
+
+  void addToReady(std::shared_ptr<Task> task);
+  void addToCompleted(std::shared_ptr<Task> task);
+  void addToProcessors(std::shared_ptr<Processor> processor);
 
 private:
   int _m{1};
+  int _n{0};
   double _util{0.0};
-  std::vector<std::unique_ptr<Processor>> _processors;
-  Tasks _completed;
-  Tasks _ready;
+
+  Pool<Processor> _processors;
+  Pool<Task> _ready;
+  Pool<Task> _running;
+  Pool<Task> _completed;
 
   time_t _t{0};
   time_t _dt{0};
+  Timer _timer;
 
-  static void _DeepCopy(const Tasks &src, Tasks &dst);
-  void _Invalidate();
-  const States _GetStates(const Tasks &_tasks) const;
+  void invalidate();
+  const States getStates(Pool<Task> &_tasks) const;
 };
 
 #endif

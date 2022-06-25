@@ -1,9 +1,17 @@
 #ifndef TASK_HPP
 #define TASK_HPP
 
+#include <Processor.hpp>
 #include <ctime>
+#include <memory>
+#include <mutex>
+#include <thread>
+#include <vector>
 
-class Task {
+// Forward declaration to avoid cyclic includes
+class TaskSystem;
+
+class Task : public std::enable_shared_from_this<Task> {
 public:
   enum class Status { IDLE, RUNNING, COMPLETED };
 
@@ -30,13 +38,19 @@ public:
   };
 
   Task(Parameters params);
-  double Util() const { return _params.U; };
-  void Reset(bool start = true);
+  ~Task();
+  int getId() const { return _id; };
+  double util() const { return _params.U; };
+  void reset(bool start = true);
   const Parameters &Params() const { return _params; };
   const Attributes &Attrs() const { return _attrs; };
 
-  bool Ready();
-  bool Step(bool selected = false, time_t delta = 1);
+  bool ready();
+  void allocate(std::shared_ptr<Processor> processor = nullptr,
+                time_t delta = 1);
+  void simulate();
+
+  std::shared_ptr<Task> getShared() { return shared_from_this(); }
 
 private:
   time_t _t{0};
@@ -44,7 +58,17 @@ private:
   Attributes _attrs;
   Status _status{Status::IDLE};
 
-  void _Update(bool reload = true);
+  time_t _delta{0};
+  std::shared_ptr<Processor> _processor;
+  std::shared_ptr<TaskSystem> _system;
+
+  void step();
+  void update(bool reload = true);
+
+  static std::mutex _mutex; // Shared by all tasks for protecting cout
+  int _id;
+  static int _idCount; // global variable for counting task object ids
+  std::vector<std::thread> _threads;
 };
 
 #endif
