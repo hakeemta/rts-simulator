@@ -4,8 +4,6 @@
 #include <Processor.hpp>
 #include <ctime>
 #include <memory>
-#include <mutex>
-#include <thread>
 #include <vector>
 
 // Forward declaration to avoid cyclic includes
@@ -48,8 +46,8 @@ public:
   bool ready();
   void allocate(std::shared_ptr<Processor> processor = nullptr,
                 time_t delta = 1);
+  void step(const time_t t);
   void linkSystem(std::shared_ptr<TaskSystem> system) { _system = system; };
-  void simulate();
 
   std::shared_ptr<Task> getShared() { return shared_from_this(); }
 
@@ -59,17 +57,13 @@ private:
   Attributes _attrs;
   Status _status{Status::IDLE};
 
-  time_t _delta{0};
   std::shared_ptr<Processor> _processor;
   std::shared_ptr<TaskSystem> _system;
 
-  void step();
   void update(bool reload = true);
 
-  static std::mutex _mutex; // Shared by all tasks for protecting cout
   int _id;
   static int _idCount; // global variable for counting task object ids
-  std::unique_ptr<std::thread> _thread;
 };
 
 #endif

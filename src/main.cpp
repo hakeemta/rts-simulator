@@ -9,15 +9,15 @@
 int Processor::_idCount = 0;
 
 int main() {
-  std::shared_ptr<TaskSystem> system = std::make_shared<TaskSystem>(2);
+  std::shared_ptr<TaskSystem> system = std::make_shared<TaskSystem>(1);
 
   system->addTask(Task::Parameters{1, 2});
   system->addTask(Task::Parameters{3, 6});
 
-  system->addTask(Task::Parameters{1, 3});
-  system->addTask(Task::Parameters{2, 9});
-  system->addTask(Task::Parameters{2, 9});
-  system->addTask(Task::Parameters{2, 9});
+  // system->addTask(Task::Parameters{1, 3});
+  // system->addTask(Task::Parameters{2, 9});
+  // system->addTask(Task::Parameters{2, 9});
+  // system->addTask(Task::Parameters{2, 9});
 
   // // TaskSystem systemSnapshot(std::move(system));
   // // system = std::move(systemSnapshot);
