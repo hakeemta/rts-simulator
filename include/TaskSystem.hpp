@@ -4,16 +4,14 @@
 #include <Processor.hpp>
 #include <Task.hpp>
 #include <condition_variable>
-#include <mutex>
 #include <memory>
+#include <mutex>
 #include <vector>
 
 using States = std::vector<std::pair<Task::Parameters, Task::Attributes>>;
 
 // Auxiliary class to manage entities
-
-template<class T, template<class> class P>
-class Pool {
+template <class T, template <class> class P> class Pool {
 public:
   Pool(){};
 
@@ -53,10 +51,6 @@ public:
   const States operator()();
   const States Completed();
   const States operator()(const std::vector<int> &indices);
-
-  void addToReady(std::shared_ptr<Task> task);
-  void addToCompleted(std::shared_ptr<Task> task);
-  void returnProcessor(std::shared_ptr<Processor> processor);
 
 private:
   int _m{1};

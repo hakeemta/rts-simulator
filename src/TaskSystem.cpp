@@ -153,7 +153,6 @@ void TaskSystem::addTask(Task::Parameters params) {
                       return std::gcd(init, first);
                     });
 
-  task->linkSystem(shared_from_this());
   _ready.add(std::move(task));
 }
 
@@ -194,18 +193,6 @@ const States TaskSystem::operator()() { return getStates(_ready); };
 
 const States TaskSystem::Completed() { return getStates(_completed); }
 
-void TaskSystem::addToReady(std::shared_ptr<Task> task) {
-  _ready.add(std::move(task));
-}
-
-void TaskSystem::addToCompleted(std::shared_ptr<Task> task) {
-  _completed.add(std::move(task));
-}
-
-void TaskSystem::returnProcessor(std::shared_ptr<Processor> processor) {
-  _processors.add(std::move(processor));
-}
-
 const States TaskSystem::operator()(const std::vector<int> &indices) {
   // Selected ready tasks
   for (int k = 0; k < indices.size(); k++) {
@@ -213,8 +200,8 @@ const States TaskSystem::operator()(const std::vector<int> &indices) {
     auto &task = _ready[index];
     auto &proc = _processors[k];
 
-    std::cout << task->getId() << " SELECTED to run on " << proc->getId()
-              << " for " << _dt << std::endl;
+    // std::cout << task->getId() << " SELECTED to run on " << proc->getId()
+    //           << " for " << _dt << std::endl;
 
     task->allocate(std::move(proc), _dt);
     _running.add(std::move(task));
@@ -241,7 +228,21 @@ const States TaskSystem::operator()(const std::vector<int> &indices) {
   _t += _dt;
   for (int i = 0; i < _running.size(); i++) {
     auto task = std::move(_running[i]);
-    task->step(_t);
+    if (task->step(_t)) {
+      // Release resources
+      auto _processor = task->releaseProcessor();
+      if (_processor != nullptr) {
+        _processors.add(std::move(_processor));
+      }
+
+      if (task->ready()) {
+        // Add to ready
+        _ready.add(std::move(task));
+      } else {
+        // Add to completed
+        _completed.add(std::move(task));
+      }
+    }
   }
   _running.refresh();
 

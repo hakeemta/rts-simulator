@@ -9,7 +9,7 @@
 // Forward declaration to avoid cyclic includes
 class TaskSystem;
 
-class Task : public std::enable_shared_from_this<Task> {
+class Task {
 public:
   enum class Status { IDLE, RUNNING, COMPLETED };
 
@@ -46,10 +46,8 @@ public:
   bool ready();
   void allocate(std::shared_ptr<Processor> processor = nullptr,
                 time_t delta = 1);
-  void step(const time_t t);
-  void linkSystem(std::shared_ptr<TaskSystem> system) { _system = system; };
-
-  std::shared_ptr<Task> getShared() { return shared_from_this(); }
+  std::shared_ptr<Processor> releaseProcessor();
+  bool step(const time_t t);
 
 private:
   time_t _t{0};
@@ -58,7 +56,6 @@ private:
   Status _status{Status::IDLE};
 
   std::shared_ptr<Processor> _processor;
-  std::shared_ptr<TaskSystem> _system;
 
   void update(bool reload = true);
 

@@ -71,23 +71,11 @@ void Task::allocate(std::shared_ptr<Processor> processor, time_t delta) {
     reset(false);
   }
 
-  std::cout << _id << " stepped for " << delta << std::endl;
+  // std::cout << _id << " stepped for " << delta << std::endl;
 }
 
-void Task::step(const time_t t) {
-  if (_t != t) {
-    return;
-  }
-
-  // Release resources
-  if (_processor != nullptr) {
-    _system->returnProcessor(std::move(_processor));
-  }
-  if (_status == Status::COMPLETED) {
-    // Add to completed
-    _system->addToCompleted(std::move(shared_from_this()));
-  } else {
-    // Add to ready
-    _system->addToReady(std::move(shared_from_this()));
-  }
+std::shared_ptr<Processor> Task::releaseProcessor() {
+  return std::move(_processor);
 }
+
+bool Task::step(const time_t t) { return _t == t; }
