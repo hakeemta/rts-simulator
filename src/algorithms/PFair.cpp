@@ -43,10 +43,10 @@ PF(time_t t, const int &m,
     int symbol2 = getSymbol(t, state.first, state.second);
     assert(symbol == symbol2);
 
-    if ((lag > 0) && (symbol > 0)) {
+    if ((lag > 0) && (symbol >= 0)) {
       // Urgent: behind AND +ve symbol
       indices.emplace_back(i);
-    } else if ((lag < 0) && (symbol < 0)) {
+    } else if ((lag < 0) && (symbol <= 0)) {
       // Tnegru: ahead AND +ve symbol, DO NOTHING
     } else {
       // Other tasks
