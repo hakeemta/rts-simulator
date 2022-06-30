@@ -14,6 +14,17 @@ Task::Task(Parameters params) : _params(params) {
   reset();
 }
 
+Task::Task(const Task &source) {
+  _id = source._id;
+  _t = source._t;
+  _params = source._params;
+  _attrs = source._attrs;
+  _status = source._status;
+  if (source._processor != nullptr) {
+    _processor = std::make_unique<Processor>(*(source._processor));
+  }
+}
+
 Task::~Task() {}
 
 void Task::reset(bool start) {
@@ -40,14 +51,14 @@ void Task::update(bool reload) {
   _attrs.Rt = _params.D - _attrs.Lt;
 }
 
-void Task::allocate(std::shared_ptr<Processor> processor, time_t delta) {
-  _processor = std::move(processor);
-
-  if (_processor == nullptr) {
+void Task::allocate(std::unique_ptr<Processor> processor, time_t delta) {
+  if (processor == nullptr) {
     if (_status == Status::RUNNING) {
       _status = Status::IDLE;
     }
   } else {
+    _processor = std::move(processor);
+
     if (!ready()) {
       throw std::out_of_range("Task execution overrun");
     }
@@ -74,7 +85,7 @@ void Task::allocate(std::shared_ptr<Processor> processor, time_t delta) {
   // std::cout << _id << " stepped for " << delta << std::endl;
 }
 
-std::shared_ptr<Processor> Task::releaseProcessor() {
+std::unique_ptr<Processor> Task::releaseProcessor() {
   return std::move(_processor);
 }
 

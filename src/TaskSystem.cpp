@@ -5,50 +5,42 @@
 #include <numeric>
 #include <thread>
 
-template <class T, template <class> class P>
-void Pool<T, P>::copy(const Pool<T, P> &source) {
+template <class T> void Pool<T>::copy(const Pool<T> &source) {
+  _entities.clear();
+  _entities.reserve(source._entities.size());
   std::transform(source._entities.begin(), source._entities.end(),
                  std::back_inserter(_entities), [](const auto &entity) {
                    return std::make_unique<T>(*entity);
                  });
 }
 
-template <class T, template <class> class P>
-Pool<T, P>::Pool(const Pool<T, P> &source) {
-  copy(source);
-}
+template <class T> Pool<T>::Pool(const Pool<T> &source) { copy(source); }
 
-template <class T, template <class> class P>
-Pool<T, P> &Pool<T, P>::operator=(const Pool<T, P> &source) {
+template <class T> Pool<T> &Pool<T>::operator=(const Pool<T> &source) {
   copy(source);
   return *this;
 }
 
-template <class T, template <class> class P>
-Pool<T, P>::Pool(Pool<T, P> &&source) {
+template <class T> Pool<T>::Pool(Pool<T> &&source) {
   _entities = std::move(source._entities);
 }
 
-template <class T, template <class> class P>
-Pool<T, P> &Pool<T, P>::operator=(Pool<T, P> &&source) {
+template <class T> Pool<T> &Pool<T>::operator=(Pool<T> &&source) {
   _entities = std::move(source._entities);
   return *this;
 }
 
-template <class T, template <class> class P> int Pool<T, P>::size() const {
-  return _entities.size();
-}
+template <class T> int Pool<T>::size() const { return _entities.size(); }
 
-template <class T, template <class> class P> void Pool<T, P>::add(P<T> entity) {
+template <class T> void Pool<T>::add(std::unique_ptr<T> entity) {
   _entities.push_back(std::move(entity));
 }
 
-template <class T, template <class> class P>
-P<T> &Pool<T, P>::operator[](int index) {
+template <class T> std::unique_ptr<T> &Pool<T>::operator[](int index) {
   return _entities[index];
 }
 
-template <class T, template <class> class P> void Pool<T, P>::refresh() {
+template <class T> void Pool<T>::refresh() {
   _entities.erase(
       std::remove_if(_entities.begin(), _entities.end(),
                      [](auto &entity) { return entity == nullptr; }),
@@ -179,23 +171,24 @@ void TaskSystem::reset() {
   _completed.refresh();
 }
 
-const States TaskSystem::getStates(Pool<Task, std::shared_ptr> &tasks) const {
-  States states;
+State TaskSystem::getState(Pool<Task> &tasks) const {
+  State state;
 
   for (int i = 0; i < tasks.size(); i++) {
     const auto &task = tasks[i];
-    states.emplace_back(task->Params(), task->Attrs());
+    state.emplace_back(task->Params(), task->Attrs());
   }
-  return states;
+
+  return state;
 }
 
-const States TaskSystem::operator()() { return getStates(_ready); };
+State TaskSystem::operator()() { return getState(_ready); };
 
-const States TaskSystem::Completed() { return getStates(_completed); }
+State TaskSystem::Completed() { return getState(_completed); }
 
-const States TaskSystem::operator()(const std::vector<int> &indices) {
+State TaskSystem::operator()(const std::vector<int> &indices) {
   // Selected ready tasks
-  for (int k = 0; k < indices.size(); k++) {
+  for (int k = 0; k < _processors.size(); k++) {
     const auto &index = indices[k];
     auto &task = _ready[index];
     auto &proc = _processors[k];
@@ -206,6 +199,7 @@ const States TaskSystem::operator()(const std::vector<int> &indices) {
     task->allocate(std::move(proc), _dt);
     _running.add(std::move(task));
   }
+
   // Purge null (allocated) tasks with corresponding processors
   _processors.refresh();
   _ready.refresh();
@@ -227,7 +221,7 @@ const States TaskSystem::operator()(const std::vector<int> &indices) {
 
   _t += _dt;
   for (int i = 0; i < _running.size(); i++) {
-    auto task = std::move(_running[i]);
+    auto &task = _running[i];
     if (task->step(_t)) {
       // Release resources
       auto _processor = task->releaseProcessor();

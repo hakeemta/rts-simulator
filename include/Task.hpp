@@ -14,6 +14,7 @@ public:
   enum class Status { IDLE, RUNNING, COMPLETED };
 
   struct Parameters {
+    Parameters(){};
     Parameters(time_t C, time_t T, time_t D = 0, time_t O = 0)
         : C(C), T(T), D(D), O(O), U{static_cast<double>(C) / T} {
       if (D == 0) {
@@ -35,7 +36,9 @@ public:
     time_t releases{1};
   };
 
+  Task(){};
   Task(Parameters params);
+  Task(const Task &source);
   ~Task();
   int getId() const { return _id; };
   double util() const { return _params.U; };
@@ -44,9 +47,9 @@ public:
   const Attributes &Attrs() const { return _attrs; };
 
   bool ready();
-  void allocate(std::shared_ptr<Processor> processor = nullptr,
+  void allocate(std::unique_ptr<Processor> processor = nullptr,
                 time_t delta = 1);
-  std::shared_ptr<Processor> releaseProcessor();
+  std::unique_ptr<Processor> releaseProcessor();
   bool step(const time_t t);
 
 private:
@@ -55,7 +58,7 @@ private:
   Attributes _attrs;
   Status _status{Status::IDLE};
 
-  std::shared_ptr<Processor> _processor;
+  std::unique_ptr<Processor> _processor;
 
   void update(bool reload = true);
 

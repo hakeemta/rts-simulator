@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "FA0AD851-4611-44FA-94AA-E0D8D7448E8D"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "85C5F521-3288-481F-90E9-04CD90BFF15C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "src/main.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "main()"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "85C5F521-3288-481F-90E9-04CD90BFF15C - e70763baa594e2fc"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "main"
+                  moduleName = "RTSSimulator"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/main.cpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "53"
+                  endingLineNumber = "53"
+                  offsetFromSymbolStart = "968">
+               </Location>
+               <Location
+                  uuid = "85C5F521-3288-481F-90E9-04CD90BFF15C - a164aa2290959b58"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "main"
+                  moduleName = "libRTSSimulatorLib.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/main.cpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "53"
+                  endingLineNumber = "53"
+                  offsetFromSymbolStart = "968">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

@@ -8,31 +8,31 @@
 #include <mutex>
 #include <vector>
 
-using States = std::vector<std::pair<Task::Parameters, Task::Attributes>>;
+using State = std::vector<std::pair<Task::Parameters, Task::Attributes>>;
 
 // Auxiliary class to manage entities
-template <class T, template <class> class P> class Pool {
+template <class T> class Pool {
 public:
   Pool(){};
 
-  Pool(const Pool<T, P> &source);
-  Pool<T, P> &operator=(const Pool<T, P> &source);
-  Pool(Pool<T, P> &&source);
-  Pool<T, P> &operator=(Pool<T, P> &&source);
+  Pool(const Pool<T> &source);
+  Pool<T> &operator=(const Pool<T> &source);
+  Pool(Pool<T> &&source);
+  Pool<T> &operator=(Pool<T> &&source);
   ~Pool(){};
 
   int size() const;
-  void add(P<T> entity);
-  P<T> &operator[](int index);
+  void add(std::unique_ptr<T> entity);
+  std::unique_ptr<T> &operator[](int index);
   void refresh();
 
 private:
-  std::vector<P<T>> _entities;
+  std::vector<std::unique_ptr<T>> _entities;
 
-  void copy(const Pool<T, P> &source);
+  void copy(const Pool<T> &source);
 };
 
-class TaskSystem : public std::enable_shared_from_this<TaskSystem> {
+class TaskSystem {
 public:
   TaskSystem();
   TaskSystem(int m);
@@ -48,25 +48,25 @@ public:
   const time_t T() const { return _t; }
   void reset();
 
-  const States operator()();
-  const States Completed();
-  const States operator()(const std::vector<int> &indices);
+  State operator()();
+  State Completed();
+  State operator()(const std::vector<int> &indices);
 
 private:
   int _m{1};
   int _n{0};
   double _util{0.0};
 
-  Pool<Processor, std::shared_ptr> _processors;
-  Pool<Task, std::shared_ptr> _ready;
-  Pool<Task, std::shared_ptr> _running;
-  Pool<Task, std::shared_ptr> _completed;
+  Pool<Processor> _processors;
+  Pool<Task> _ready;
+  Pool<Task> _running;
+  Pool<Task> _completed;
 
   time_t _t{0};
   time_t _dt{0};
 
   void invalidate();
-  const States getStates(Pool<Task, std::shared_ptr> &_tasks) const;
+  State getState(Pool<Task> &_tasks) const;
 };
 
 #endif

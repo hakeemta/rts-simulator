@@ -1,0 +1,1004 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		1A16FCC1DBB749B2930120C3 /* ALL_BUILD */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 0524CD88B23D4B32928897CD /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
+			buildPhases = (
+				A36365CF764D5D64AA808CE0 /* Generate CMakeFiles/ALL_BUILD */,
+			);
+			dependencies = (
+				AD473B77934D4592B060708E /* PBXTargetDependency */,
+				99556661A1FC4BF5A4D4DABC /* PBXTargetDependency */,
+				01A53E62D3FC4D3AAAEDA1FB /* PBXTargetDependency */,
+			);
+			name = ALL_BUILD;
+			productName = ALL_BUILD;
+		};
+		F0C105F4B36C4C1DAAD5E2B7 /* ZERO_CHECK */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 47014A070E4447CBADA61FD3 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
+			buildPhases = (
+				F66C282884A5DB690772D3FE /* Generate CMakeFiles/ZERO_CHECK */,
+			);
+			dependencies = (
+			);
+			name = ZERO_CHECK;
+			productName = ZERO_CHECK;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		18E4F595F98F40348559FF0B /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/algorithms */ = {isa = PBXBuildFile; fileRef = 0E6C32C6F7704335BC6B9ED1 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/algorithms */; };
+		42A55B40379146CD813C4322 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/algorithms/PFair.cpp */ = {isa = PBXBuildFile; fileRef = 377DB8049F6441408F3F9D05 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/algorithms/PFair.cpp */; };
+		5CF87735848D4FA192E9A66C /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/main.cpp */ = {isa = PBXBuildFile; fileRef = 6D482220A8A44584AF8C8E5C /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/main.cpp */; };
+		83A3A358BF6A49D0B9AE67DF /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/build/includes */ = {isa = PBXBuildFile; fileRef = 4A948456697041D19CD2265A /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/build/includes */; };
+		8C59E3D5D8174E50A7276A2F /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 06AE5551468B49ED818BA949 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/CMakeLists.txt */; };
+		9BEF3AF0BCC24A22BF06CF9F /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/build/temp.macosx-11.0-arm64-3.9 */ = {isa = PBXBuildFile; fileRef = 0368F73750D8476B9DEA8709 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/build/temp.macosx-11.0-arm64-3.9 */; };
+		9E41BCAB36E348318566BB40 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/Task.cpp */ = {isa = PBXBuildFile; fileRef = 2A78C2E6CC8A4AAE845F84F2 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/Task.cpp */; };
+		CD42EE2961394AC9BD11BBD7 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/build */ = {isa = PBXBuildFile; fileRef = 7654812B0EAA49C69791B94A /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/build */; };
+		CD7D7709CCDF466EBE06B9D4 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/main.cpp */ = {isa = PBXBuildFile; fileRef = 34C8039899884000BB8FF124 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/main.cpp */; };
+		D0A4811B6288475288FDB0C4 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/TaskSystem.cpp */ = {isa = PBXBuildFile; fileRef = 325471E85B5146BA85194A5C /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/TaskSystem.cpp */; };
+		F4538DBB6908405C809FC2D0 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = E65CAF9EA4DF4DA091B36C93 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/CMakeLists.txt */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		0027D0DECC6C4FB59D6FA5DB /* Debug */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Debug;
+		};
+		2422313C81F94823BE80E4F1 /* MinSizeRel */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = MinSizeRel;
+		};
+		452621288D4A46ED8C40368A /* RelWithDebInfo */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = RelWithDebInfo;
+		};
+		E92ACA8A44664890BDB2B103 /* Release */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Release;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXContainerItemProxy section */
+		2D471D9EEF8F42408EE45FE8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 14E8E4D526494DF98C18F70D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6145C962217A4D79B64474EB;
+			remoteInfo = RTSSimulatorLib;
+		};
+		31C8FDED91444175AA76593D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 14E8E4D526494DF98C18F70D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F0C105F4B36C4C1DAAD5E2B7;
+			remoteInfo = ZERO_CHECK;
+		};
+		47630A44B4A94977AED62B3D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 14E8E4D526494DF98C18F70D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F0C105F4B36C4C1DAAD5E2B7;
+			remoteInfo = ZERO_CHECK;
+		};
+		70733879FC9440F98DE3E611 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 14E8E4D526494DF98C18F70D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F0C105F4B36C4C1DAAD5E2B7;
+			remoteInfo = ZERO_CHECK;
+		};
+		737AB97D6E934E4B950159CB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 14E8E4D526494DF98C18F70D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = ECA9A727F94B48179F57F437;
+			remoteInfo = RTSSimulator;
+		};
+		95DD024CAC384A93B234D6BD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 14E8E4D526494DF98C18F70D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6145C962217A4D79B64474EB;
+			remoteInfo = RTSSimulatorLib;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0368F73750D8476B9DEA8709 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/build/temp.macosx-11.0-arm64-3.9 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = folder; name = "temp.macosx-11.0-arm64-3.9"; path = "src/build/temp.macosx-11.0-arm64-3.9"; sourceTree = SOURCE_ROOT; };
+		06AE5551468B49ED818BA949 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		0E6C32C6F7704335BC6B9ED1 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/algorithms */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = folder; name = algorithms; path = src/algorithms; sourceTree = SOURCE_ROOT; };
+		2A78C2E6CC8A4AAE845F84F2 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/Task.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Task.cpp; path = src/Task.cpp; sourceTree = SOURCE_ROOT; };
+		325471E85B5146BA85194A5C /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/TaskSystem.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = TaskSystem.cpp; path = src/TaskSystem.cpp; sourceTree = SOURCE_ROOT; };
+		34C8039899884000BB8FF124 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/main.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
+		377DB8049F6441408F3F9D05 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/algorithms/PFair.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = PFair.cpp; path = src/algorithms/PFair.cpp; sourceTree = SOURCE_ROOT; };
+		4A948456697041D19CD2265A /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/build/includes */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = folder; name = includes; path = src/build/includes; sourceTree = SOURCE_ROOT; };
+		6D482220A8A44584AF8C8E5C /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/main.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
+		7654812B0EAA49C69791B94A /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/build */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = folder; name = build; path = src/build; sourceTree = SOURCE_ROOT; };
+		911171AE9534450A9DC31A1D /* RTSSimulator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = RTSSimulator; sourceTree = BUILT_PRODUCTS_DIR; };
+		E65CAF9EA4DF4DA091B36C93 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		EE237A82E05B4AFAA319168A /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		F56FB521D44D4A289AE0AA10 /* RTSSimulatorLib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = libRTSSimulatorLib.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5CFD909D4C5745BB88593B47 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB69158EDC99486F8B16B198 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		05DDAB01375A4A7D9193808E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5C4C15FFCC77482AA157269E = {
+			isa = PBXGroup;
+			children = (
+				FA204032E4BF4BE1901F89D5 /* RTSSimulatorLib */,
+				A91354C5F12F42978255CD66 /* RTSSimulator */,
+				D07150307F254B449A1F533D /* ALL_BUILD */,
+				92C1FFCD8E1E413A9BDD4EFB /* Products */,
+				05DDAB01375A4A7D9193808E /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		68123E6012BB427F9368BF5C /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				2A78C2E6CC8A4AAE845F84F2 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/Task.cpp */,
+				325471E85B5146BA85194A5C /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/TaskSystem.cpp */,
+				377DB8049F6441408F3F9D05 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/algorithms/PFair.cpp */,
+				34C8039899884000BB8FF124 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/main.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		7A5A244B32694DEE80614806 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		92C1FFCD8E1E413A9BDD4EFB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				911171AE9534450A9DC31A1D /* RTSSimulator */,
+				F56FB521D44D4A289AE0AA10 /* RTSSimulatorLib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A91354C5F12F42978255CD66 /* RTSSimulator */ = {
+			isa = PBXGroup;
+			children = (
+				CD4555CBF81D43D0816BE720 /* Source Files */,
+				E65CAF9EA4DF4DA091B36C93 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/CMakeLists.txt */,
+			);
+			name = RTSSimulator;
+			sourceTree = "<group>";
+		};
+		CD4555CBF81D43D0816BE720 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				6D482220A8A44584AF8C8E5C /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/main.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		D07150307F254B449A1F533D /* ALL_BUILD */ = {
+			isa = PBXGroup;
+			children = (
+				7A5A244B32694DEE80614806 /* CMake Rules */,
+				EE237A82E05B4AFAA319168A /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/CMakeLists.txt */,
+			);
+			name = ALL_BUILD;
+			sourceTree = "<group>";
+		};
+		FA204032E4BF4BE1901F89D5 /* RTSSimulatorLib */ = {
+			isa = PBXGroup;
+			children = (
+				68123E6012BB427F9368BF5C /* Source Files */,
+				06AE5551468B49ED818BA949 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/CMakeLists.txt */,
+				0E6C32C6F7704335BC6B9ED1 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/algorithms */,
+				7654812B0EAA49C69791B94A /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/build */,
+				4A948456697041D19CD2265A /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/build/includes */,
+				0368F73750D8476B9DEA8709 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/build/temp.macosx-11.0-arm64-3.9 */,
+			);
+			name = RTSSimulatorLib;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6145C962217A4D79B64474EB /* RTSSimulatorLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A17F40D8A174B7390D330D0 /* Build configuration list for PBXNativeTarget "RTSSimulatorLib" */;
+			buildPhases = (
+				0CEB4CDF99C941EA9E3A9F0B /* Sources */,
+				5CFD909D4C5745BB88593B47 /* Frameworks */,
+				0BD40DC0559353DA5F4588E7 /* CMake PostBuild Rules */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A82CB42A00CD44489B8AD6D0 /* PBXTargetDependency */,
+			);
+			name = RTSSimulatorLib;
+			productName = RTSSimulatorLib;
+			productReference = F56FB521D44D4A289AE0AA10 /* RTSSimulatorLib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		ECA9A727F94B48179F57F437 /* RTSSimulator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D0088022E1C04DE39EF91BFA /* Build configuration list for PBXNativeTarget "RTSSimulator" */;
+			buildPhases = (
+				2BB0D02B6BAE47B4A5FF63D4 /* Sources */,
+				AB69158EDC99486F8B16B198 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DEE81EF0CB1248ACBC01E2C5 /* PBXTargetDependency */,
+				5EC2CBEB779F421488DFBD3B /* PBXTargetDependency */,
+			);
+			name = RTSSimulator;
+			productName = RTSSimulator;
+			productReference = 911171AE9534450A9DC31A1D /* RTSSimulator */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		14E8E4D526494DF98C18F70D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1340;
+			};
+			buildConfigurationList = 6FAA6079B8BC4A97B13F6FD2 /* Build configuration list for PBXProject "RTSSimulatorProj" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				0027D0DECC6C4FB59D6FA5DB /* Debug */,
+				E92ACA8A44664890BDB2B103 /* Release */,
+				2422313C81F94823BE80E4F1 /* MinSizeRel */,
+				452621288D4A46ED8C40368A /* RelWithDebInfo */,
+			);
+			compatibilityVersion = "Xcode 3.2";
+			hasScannedForEncodings = 0;
+			mainGroup = 5C4C15FFCC77482AA157269E;
+			projectDirPath = .;
+			projectRoot = "";
+			targets = (
+				1A16FCC1DBB749B2930120C3 /* ALL_BUILD */,
+				ECA9A727F94B48179F57F437 /* RTSSimulator */,
+				6145C962217A4D79B64474EB /* RTSSimulatorLib */,
+				F0C105F4B36C4C1DAAD5E2B7 /* ZERO_CHECK */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0BD40DC0559353DA5F4588E7 /* CMake PostBuild Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake PostBuild Rules";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e
+if test \"$CONFIGURATION\" = \"Debug\"; then :
+  cd /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator
+  /Applications/CMake.app/Contents/bin/cmake -E cmake_symlink_library /Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/Debug/libRTSSimulatorLib.dylib /Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/Debug/libRTSSimulatorLib.dylib /Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/Debug/libRTSSimulatorLib.dylib
+fi
+if test \"$CONFIGURATION\" = \"Release\"; then :
+  cd /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator
+  /Applications/CMake.app/Contents/bin/cmake -E cmake_symlink_library /Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/Release/libRTSSimulatorLib.dylib /Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/Release/libRTSSimulatorLib.dylib /Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/Release/libRTSSimulatorLib.dylib
+fi
+if test \"$CONFIGURATION\" = \"MinSizeRel\"; then :
+  cd /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator
+  /Applications/CMake.app/Contents/bin/cmake -E cmake_symlink_library /Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/MinSizeRel/libRTSSimulatorLib.dylib /Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/MinSizeRel/libRTSSimulatorLib.dylib /Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/MinSizeRel/libRTSSimulatorLib.dylib
+fi
+if test \"$CONFIGURATION\" = \"RelWithDebInfo\"; then :
+  cd /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator
+  /Applications/CMake.app/Contents/bin/cmake -E cmake_symlink_library /Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/RelWithDebInfo/libRTSSimulatorLib.dylib /Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/RelWithDebInfo/libRTSSimulatorLib.dylib /Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/RelWithDebInfo/libRTSSimulatorLib.dylib
+fi
+";
+			showEnvVarsInLog = 0;
+		};
+		3C0110FC8322DE7E50886E21 = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		9B50530E35CC49C82C2FACCF = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		A36365CF764D5D64AA808CE0 /* Generate CMakeFiles/ALL_BUILD */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate CMakeFiles/ALL_BUILD";
+			outputPaths = (
+"/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/CMakeFiles/ALL_BUILD"			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e
+if test \"$CONFIGURATION\" = \"Debug\"; then :
+  cd /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator
+  echo Build\\ all\\ projects
+fi
+if test \"$CONFIGURATION\" = \"Release\"; then :
+  cd /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator
+  echo Build\\ all\\ projects
+fi
+if test \"$CONFIGURATION\" = \"MinSizeRel\"; then :
+  cd /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator
+  echo Build\\ all\\ projects
+fi
+if test \"$CONFIGURATION\" = \"RelWithDebInfo\"; then :
+  cd /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator
+  echo Build\\ all\\ projects
+fi
+";
+			showEnvVarsInLog = 0;
+		};
+		F66C282884A5DB690772D3FE /* Generate CMakeFiles/ZERO_CHECK */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate CMakeFiles/ZERO_CHECK";
+			outputPaths = (
+"/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/CMakeFiles/ZERO_CHECK"			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e
+if test \"$CONFIGURATION\" = \"Debug\"; then :
+  cd /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator
+  make -f /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/CMakeScripts/ReRunCMake.make
+fi
+if test \"$CONFIGURATION\" = \"Release\"; then :
+  cd /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator
+  make -f /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/CMakeScripts/ReRunCMake.make
+fi
+if test \"$CONFIGURATION\" = \"MinSizeRel\"; then :
+  cd /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator
+  make -f /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/CMakeScripts/ReRunCMake.make
+fi
+if test \"$CONFIGURATION\" = \"RelWithDebInfo\"; then :
+  cd /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator
+  make -f /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/CMakeScripts/ReRunCMake.make
+fi
+";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0CEB4CDF99C941EA9E3A9F0B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E41BCAB36E348318566BB40 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/Task.cpp */,
+				D0A4811B6288475288FDB0C4 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/TaskSystem.cpp */,
+				42A55B40379146CD813C4322 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/algorithms/PFair.cpp */,
+				CD7D7709CCDF466EBE06B9D4 /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/main.cpp */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2BB0D02B6BAE47B4A5FF63D4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5CF87735848D4FA192E9A66C /* /Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/src/main.cpp */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		01A53E62D3FC4D3AAAEDA1FB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = ECA9A727F94B48179F57F437 /* RTSSimulator */;
+			targetProxy = 737AB97D6E934E4B950159CB /* PBXContainerItemProxy */;
+		};
+		5EC2CBEB779F421488DFBD3B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6145C962217A4D79B64474EB /* RTSSimulatorLib */;
+			targetProxy = 95DD024CAC384A93B234D6BD /* PBXContainerItemProxy */;
+		};
+		99556661A1FC4BF5A4D4DABC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6145C962217A4D79B64474EB /* RTSSimulatorLib */;
+			targetProxy = 2D471D9EEF8F42408EE45FE8 /* PBXContainerItemProxy */;
+		};
+		A82CB42A00CD44489B8AD6D0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F0C105F4B36C4C1DAAD5E2B7 /* ZERO_CHECK */;
+			targetProxy = 31C8FDED91444175AA76593D /* PBXContainerItemProxy */;
+		};
+		AD473B77934D4592B060708E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F0C105F4B36C4C1DAAD5E2B7 /* ZERO_CHECK */;
+			targetProxy = 47630A44B4A94977AED62B3D /* PBXContainerItemProxy */;
+		};
+		DEE81EF0CB1248ACBC01E2C5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F0C105F4B36C4C1DAAD5E2B7 /* ZERO_CHECK */;
+			targetProxy = 70733879FC9440F98DE3E611 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0885632CDB1A4D6F88E84131 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/MinSizeRel";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",RTSSimulatorLib_EXPORTS,"$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/include","/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/include/algorithms","$(inherited)");
+				INSTALL_PATH = "@rpath";
+				LIBRARY_STYLE = DYNAMIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = " -std=c++17 -pthread     -DNDEBUG -fPIC '-std=gnu++17' ";
+				OTHER_LDFLAGS = (" -dynamiclib -Wl,-headerpad_max_install_names","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = RTSSimulatorLib;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		23331E8439EA417E81EBA393 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		268BE0DC99FE4171BF4CB77E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/include","/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/include/algorithms","$(inherited)");
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = ("/Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/Release","$(inherited)");
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = " -std=c++17 -pthread     -DNDEBUG '-std=gnu++17' ";
+				OTHER_LDFLAGS = (" -Wl,-search_paths_first -Wl,-headerpad_max_install_names","/Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/Release/libRTSSimulatorLib.dylib","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = RTSSimulator;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		549C33FD60A3469FA7460959 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		56719B3862E44580A9C92FE4 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		5E741C2DC1144BB4AFF3BBBF /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/include","/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/include/algorithms","$(inherited)");
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = ("/Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/RelWithDebInfo","$(inherited)");
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = " -std=c++17 -pthread        -DNDEBUG '-std=gnu++17' ";
+				OTHER_LDFLAGS = (" -Wl,-search_paths_first -Wl,-headerpad_max_install_names","/Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/RelWithDebInfo/libRTSSimulatorLib.dylib","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = RTSSimulator;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		6828099A9487476A8BFD0398 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk;
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/build";
+			};
+			name = RelWithDebInfo;
+		};
+		73FEFE0368A242C19BA177BE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk;
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/build";
+			};
+			name = Debug;
+		};
+		78804DE0D678493EA76AD5C3 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/RelWithDebInfo";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",RTSSimulatorLib_EXPORTS,"$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/include","/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/include/algorithms","$(inherited)");
+				INSTALL_PATH = "@rpath";
+				LIBRARY_STYLE = DYNAMIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = " -std=c++17 -pthread        -DNDEBUG -fPIC '-std=gnu++17' ";
+				OTHER_LDFLAGS = (" -dynamiclib -Wl,-headerpad_max_install_names","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = RTSSimulatorLib;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		8C6C3925473241C7B3353867 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/Debug";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",RTSSimulatorLib_EXPORTS,"$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/include","/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/include/algorithms","$(inherited)");
+				INSTALL_PATH = "@rpath";
+				LIBRARY_STYLE = DYNAMIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = " -std=c++17 -pthread    -fPIC '-std=gnu++17' ";
+				OTHER_LDFLAGS = (" -dynamiclib -Wl,-headerpad_max_install_names","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = RTSSimulatorLib;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		901E7D0D5DF941BAAE2A2135 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/Release";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",RTSSimulatorLib_EXPORTS,"$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/include","/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/include/algorithms","$(inherited)");
+				INSTALL_PATH = "@rpath";
+				LIBRARY_STYLE = DYNAMIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = " -std=c++17 -pthread     -DNDEBUG -fPIC '-std=gnu++17' ";
+				OTHER_LDFLAGS = (" -dynamiclib -Wl,-headerpad_max_install_names","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = RTSSimulatorLib;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		97FCF59C28FC4E3EAD8F6926 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		A180279E5604465B967FE489 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		A23AA2C9DFC644F6A2E6980C /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk;
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/build";
+			};
+			name = MinSizeRel;
+		};
+		C387E5F3DC3F4DC0B6926B11 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		C4A165D0A0B2478FB54C830D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		C5B40EB29DAA48AB84D9651A /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/include","/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/include/algorithms","$(inherited)");
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = ("/Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/MinSizeRel","$(inherited)");
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = " -std=c++17 -pthread     -DNDEBUG '-std=gnu++17' ";
+				OTHER_LDFLAGS = (" -Wl,-search_paths_first -Wl,-headerpad_max_install_names","/Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/MinSizeRel/libRTSSimulatorLib.dylib","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = RTSSimulator;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		DB643ECEFF9A42DBAE306D03 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/include","/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/include/algorithms","$(inherited)");
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = ("/Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/Debug","$(inherited)");
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = " -std=c++17 -pthread    '-std=gnu++17' ";
+				OTHER_LDFLAGS = (" -Wl,-search_paths_first -Wl,-headerpad_max_install_names","/Users/abdulhakeemabdulrahman/research/rts-simulator-py/build/lib.macosx-11.0-arm64-cpython-39/Debug/libRTSSimulatorLib.dylib","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = RTSSimulator;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		DFE5CFEDEEBC4BE4953EEB22 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk;
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator/build";
+			};
+			name = Release;
+		};
+		E3C5304E395646A0B409403E /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/abdulhakeemabdulrahman/research/rts-simulator-py/rts-simulator";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0524CD88B23D4B32928897CD /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C4A165D0A0B2478FB54C830D /* Debug */,
+				97FCF59C28FC4E3EAD8F6926 /* Release */,
+				C387E5F3DC3F4DC0B6926B11 /* MinSizeRel */,
+				E3C5304E395646A0B409403E /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3A17F40D8A174B7390D330D0 /* Build configuration list for PBXNativeTarget "RTSSimulatorLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8C6C3925473241C7B3353867 /* Debug */,
+				901E7D0D5DF941BAAE2A2135 /* Release */,
+				0885632CDB1A4D6F88E84131 /* MinSizeRel */,
+				78804DE0D678493EA76AD5C3 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		47014A070E4447CBADA61FD3 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				23331E8439EA417E81EBA393 /* Debug */,
+				549C33FD60A3469FA7460959 /* Release */,
+				56719B3862E44580A9C92FE4 /* MinSizeRel */,
+				A180279E5604465B967FE489 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		6FAA6079B8BC4A97B13F6FD2 /* Build configuration list for PBXProject "RTSSimulatorProj" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				73FEFE0368A242C19BA177BE /* Debug */,
+				DFE5CFEDEEBC4BE4953EEB22 /* Release */,
+				A23AA2C9DFC644F6A2E6980C /* MinSizeRel */,
+				6828099A9487476A8BFD0398 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D0088022E1C04DE39EF91BFA /* Build configuration list for PBXNativeTarget "RTSSimulator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DB643ECEFF9A42DBAE306D03 /* Debug */,
+				268BE0DC99FE4171BF4CB77E /* Release */,
+				C5B40EB29DAA48AB84D9651A /* MinSizeRel */,
+				5E741C2DC1144BB4AFF3BBBF /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 14E8E4D526494DF98C18F70D /* Project object */;
+}
