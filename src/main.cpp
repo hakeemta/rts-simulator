@@ -28,27 +28,27 @@ int main() {
 
   std::cout << "Total Util.: " << system.Util() << std::endl;
 
-  auto state = system.operator()();
-  int m = system.M();
-  time_t t = 0;
-  for (int i = 0; i < 18000; i++) {
-    if (i != 0 && i % 200 == 0) {
-      //      system.reset();
-      TaskSystem systemSnapshot(system);
-      system = systemSnapshot;
-      state = system.operator()();
-    }
+  // auto state = system.operator()();
+  // int m = system.M();
+  // time_t t = 0;
+  // for (int i = 0; i < 18000; i++) {
+  //   if (i != 0 && i % 200 == 0) {
+  //     //      system.reset();
+  //     TaskSystem systemSnapshot(system);
+  //     system = systemSnapshot;
+  //     state = system.operator()();
+  //   }
 
-    t = system.T();
-    auto indices = PFair::PF(t, m, state);
-    assert(indices.size() <= m);
+  //   t = system.T();
+  //   auto indices = PFair::PF(t, m, state);
+  //   assert(indices.size() <= m);
 
-    state = system.operator()(indices);
-    auto completed = system.Completed();
-    std::cout << "Time done: " << system.T() << std::endl;
+  //   state = system.operator()(indices);
+  //   auto completed = system.Completed();
+  //   std::cout << "Time done: " << system.T() << std::endl;
 
-    std::this_thread::sleep_for(50ms);
-  }
+  //   std::this_thread::sleep_for(50ms);
+  // }
 
   return 0;
 }

@@ -5,53 +5,27 @@
 #include <numeric>
 #include <thread>
 
-template <class T> void Pool<T>::copy(const Pool<T> &source) {
-  _entities.clear();
-  _entities.reserve(source._entities.size());
-  std::transform(source._entities.begin(), source._entities.end(),
-                 std::back_inserter(_entities), [](const auto &entity) {
-                   return std::make_unique<T>(*entity);
-                 });
+template <class T>
+void copy(std::vector<std::unique_ptr<T>> &dest,
+          const std::vector<std::unique_ptr<T>> &src) {
+  dest.clear();
+  dest.reserve(src.size());
+  std::transform(
+      src.begin(), src.end(), std::back_inserter(dest),
+      [](const auto &entity) { return std::make_unique<T>(*entity); });
 }
 
-template <class T> Pool<T>::Pool(const Pool<T> &source) { copy(source); }
-
-template <class T> Pool<T> &Pool<T>::operator=(const Pool<T> &source) {
-  copy(source);
-  return *this;
-}
-
-template <class T> Pool<T>::Pool(Pool<T> &&source) {
-  _entities = std::move(source._entities);
-}
-
-template <class T> Pool<T> &Pool<T>::operator=(Pool<T> &&source) {
-  _entities = std::move(source._entities);
-  return *this;
-}
-
-template <class T> int Pool<T>::size() const { return _entities.size(); }
-
-template <class T> void Pool<T>::add(std::unique_ptr<T> entity) {
-  _entities.push_back(std::move(entity));
-}
-
-template <class T> std::unique_ptr<T> &Pool<T>::operator[](int index) {
-  return _entities[index];
-}
-
-template <class T> void Pool<T>::refresh() {
-  _entities.erase(
-      std::remove_if(_entities.begin(), _entities.end(),
-                     [](auto &entity) { return entity == nullptr; }),
-      _entities.end());
+template <class T> void refresh(std::vector<std::unique_ptr<T>> &v) {
+  v.erase(std::remove_if(v.begin(), v.end(),
+                         [](auto &entity) { return entity == nullptr; }),
+          v.end());
 }
 
 TaskSystem::TaskSystem() { TaskSystem(1); };
 
 TaskSystem::TaskSystem(int m) : _m(m) {
   for (int i = 0; i < m; i++) {
-    _processors.add(std::make_unique<Processor>());
+    _processors.emplace_back(std::make_unique<Processor>());
   }
 };
 
@@ -61,11 +35,10 @@ TaskSystem::TaskSystem(const TaskSystem &source) {
   _util = source._util;
   _dt = source._dt;
 
-  _ready = source._ready;
-  _running = source._running;
-  _completed = source._completed;
-
-  _processors = source._processors;
+  copy(_ready, source._ready);
+  copy(_running, source._running);
+  copy(_completed, source._completed);
+  copy(_processors, source._processors);
 }
 
 TaskSystem &TaskSystem::operator=(const TaskSystem &source) {
@@ -78,11 +51,10 @@ TaskSystem &TaskSystem::operator=(const TaskSystem &source) {
   _util = source._util;
   _dt = source._dt;
 
-  _ready = source._ready;
-  _running = source._running;
-  _completed = source._completed;
-
-  _processors = source._processors;
+  copy(_ready, source._ready);
+  copy(_running, source._running);
+  copy(_completed, source._completed);
+  copy(_processors, source._processors);
 
   return *this;
 }
@@ -103,7 +75,6 @@ TaskSystem::TaskSystem(TaskSystem &&source) {
   _ready = std::move(source._ready);
   _running = std::move(source._running);
   _completed = std::move(source._completed);
-
   _processors = std::move(source._processors);
 
   // Invalidate the source data
@@ -123,7 +94,6 @@ TaskSystem &TaskSystem::operator=(TaskSystem &&source) {
   _ready = std::move(source._ready);
   _running = std::move(source._running);
   _completed = std::move(source._completed);
-
   _processors = std::move(source._processors);
 
   // Invalidate the source data
@@ -145,7 +115,7 @@ void TaskSystem::addTask(Task::Parameters params) {
                       return std::gcd(init, first);
                     });
 
-  _ready.add(std::move(task));
+  _ready.emplace_back(std::move(task));
 }
 
 void TaskSystem::reset() {
@@ -159,19 +129,19 @@ void TaskSystem::reset() {
   for (int i = 0; i < _running.size(); i++) {
     auto &task = _running[i];
     task->reset();
-    _ready.add(std::move(task));
+    _ready.emplace_back(std::move(task));
   }
-  _running.refresh();
+  refresh(_running);
 
   for (int i = 0; i < _completed.size(); i++) {
     auto &task = _completed[i];
     task->reset();
-    _ready.add(std::move(task));
+    _ready.emplace_back(std::move(task));
   }
-  _completed.refresh();
+  refresh(_completed);
 }
 
-State TaskSystem::getState(Pool<Task> &tasks) const {
+State TaskSystem::getState(std::vector<std::unique_ptr<Task>> &tasks) {
   State state;
 
   for (int i = 0; i < tasks.size(); i++) {
@@ -188,7 +158,7 @@ State TaskSystem::Completed() { return getState(_completed); }
 
 State TaskSystem::operator()(const std::vector<int> &indices) {
   // Selected ready tasks
-  for (int k = 0; k < _processors.size(); k++) {
+  for (int k = 0; k < indices.size(); k++) {
     const auto &index = indices[k];
     auto &task = _ready[index];
     auto &proc = _processors[k];
@@ -197,27 +167,27 @@ State TaskSystem::operator()(const std::vector<int> &indices) {
     //           << " for " << _dt << std::endl;
 
     task->allocate(std::move(proc), _dt);
-    _running.add(std::move(task));
+    _running.emplace_back(std::move(task));
   }
 
   // Purge null (allocated) tasks with corresponding processors
-  _processors.refresh();
-  _ready.refresh();
+  refresh(_processors);
+  refresh(_ready);
 
   // Step unselected and previously completed tasks
   for (int i = 0; i < _ready.size(); i++) {
     auto &task = _ready[i];
     task->allocate(nullptr, _dt);
-    _running.add(std::move(task));
+    _running.emplace_back(std::move(task));
   }
-  _ready.refresh();
+  refresh(_ready);
 
   for (int i = 0; i < _completed.size(); i++) {
     auto &task = _completed[i];
     task->allocate(nullptr, _dt);
-    _running.add(std::move(task));
+    _running.emplace_back(std::move(task));
   }
-  _completed.refresh();
+  refresh(_completed);
 
   _t += _dt;
   for (int i = 0; i < _running.size(); i++) {
@@ -226,19 +196,19 @@ State TaskSystem::operator()(const std::vector<int> &indices) {
       // Release resources
       auto _processor = task->releaseProcessor();
       if (_processor != nullptr) {
-        _processors.add(std::move(_processor));
+        _processors.emplace_back(std::move(_processor));
       }
 
       if (task->ready()) {
         // Add to ready
-        _ready.add(std::move(task));
+        _ready.emplace_back(std::move(task));
       } else {
         // Add to completed
-        _completed.add(std::move(task));
+        _completed.emplace_back(std::move(task));
       }
     }
   }
-  _running.refresh();
+  refresh(_running);
 
   return this->operator()();
 }
