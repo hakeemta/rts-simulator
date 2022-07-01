@@ -29,6 +29,7 @@ public:
   };
 
   struct Attributes {
+    Attributes(){};
     time_t Ct;
     time_t Dt;
     time_t Rt;

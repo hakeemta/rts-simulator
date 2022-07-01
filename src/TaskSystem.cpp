@@ -180,14 +180,14 @@ State TaskSystem::operator()(const std::vector<int> &indices) {
     task->allocate(nullptr, _dt);
     _running.emplace_back(std::move(task));
   }
-  refresh(_ready);
+  _ready.clear();
 
   for (int i = 0; i < _completed.size(); i++) {
     auto &task = _completed[i];
     task->allocate(nullptr, _dt);
     _running.emplace_back(std::move(task));
   }
-  refresh(_completed);
+  _completed.clear();
 
   _t += _dt;
   for (int i = 0; i < _running.size(); i++) {
