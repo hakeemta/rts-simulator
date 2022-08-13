@@ -31,7 +31,8 @@ int getSymbol(const Task::Parameters &params, const Task::Attributes &attrs);
 
 std::vector<int>
 PF(time_t t, const int &m,
-   const std::vector<std::pair<Task::Parameters, Task::Attributes>> &states);
+   const std::vector<std::tuple<int, Task::Parameters, Task::Attributes>>
+       &states);
 }; // namespace PFair
 
 #endif

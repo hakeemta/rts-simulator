@@ -28,19 +28,20 @@ int getSymbol(const Task::Parameters &params, const Task::Attributes &attrs) {
 
 std::vector<int>
 PF(time_t t, const int &m,
-   const std::vector<std::pair<Task::Parameters, Task::Attributes>> &states) {
+   const std::vector<std::tuple<int, Task::Parameters, Task::Attributes>>
+       &states) {
   std::vector<int> indices;
   std::vector<int> contendingIndices;
 
   for (int i = 0; i < states.size(); i++) {
-    auto state = states[i];
+    auto [id, params, attrs] = states[i];
 
-    double lag = computeLag(t, state.first, state.second);
-    double lag2 = computeLag(state.first, state.second);
+    double lag = computeLag(t, params, attrs);
+    double lag2 = computeLag(params, attrs);
     assert(std::abs(lag - lag2) < 1e-4);
 
-    int symbol = getSymbol(t, state.first, state.second);
-    int symbol2 = getSymbol(t, state.first, state.second);
+    int symbol = getSymbol(t, params, attrs);
+    int symbol2 = getSymbol(t, params, attrs);
     assert(symbol == symbol2);
 
     if ((lag > 0) && (symbol >= 0)) {
@@ -58,8 +59,8 @@ PF(time_t t, const int &m,
     contendingIndices.erase(
         std::remove_if(contendingIndices.begin(), contendingIndices.end(),
                        [&indices, &states, &t, &m](const int &i) {
-                         auto state = states[i];
-                         auto symbol = getSymbol(t, state.first, state.second);
+                         auto [id, params, attrs] = states[i];
+                         auto symbol = getSymbol(t, params, attrs);
                          if (symbol >= 0 && indices.size() < m) {
                            indices.emplace_back(i);
                            return true;
