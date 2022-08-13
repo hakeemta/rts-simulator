@@ -30,22 +30,27 @@ public:
 
   struct Attributes {
     Attributes(){};
+    Attributes(Parameters params)
+        : Ct(params.C), Dt(params.D), Lt(params.D - params.C), Rt(params.C) {}
     time_t Ct;
     time_t Dt;
-    time_t Rt;
     time_t Lt;
+    time_t Rt;
     time_t releases{1};
   };
 
-  Task(){};
   Task(Parameters params);
   Task(const Task &source);
+  Task &operator=(const Task &source);
+  Task(Task &&source);
+  Task &operator=(Task &&source);
   ~Task();
-  int getId() const { return _id; };
+
+  int id() const { return _id; };
   double util() const { return _params.U; };
   void reset(bool start = true);
-  const Parameters &Params() const { return _params; };
-  const Attributes &Attrs() const { return _attrs; };
+  const Parameters &params() const { return _params; };
+  const Attributes &attrs() const { return _attrs; };
 
   bool ready();
   void allocate(std::unique_ptr<Processor> processor = nullptr,
@@ -58,10 +63,10 @@ private:
   Parameters _params;
   Attributes _attrs;
   Status _status{Status::IDLE};
-
   std::unique_ptr<Processor> _processor;
 
   void update(bool reload = true);
+  void invalidate();
 
   int _id;
   static int _idCount; // global variable for counting task object ids

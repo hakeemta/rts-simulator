@@ -5,7 +5,7 @@ class Processor {
 public:
   Processor() { _id = _idCount++; }
   int capacity{1};
-  int getId() const { return _id; };
+  int id() const { return _id; };
 
 private:
   int _id;
