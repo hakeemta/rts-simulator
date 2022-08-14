@@ -2,22 +2,53 @@
 #include <algorithms/PFair.hpp>
 #include <chrono>
 #include <cmath>
+#include <fstream>
+#include <functional>
 #include <iostream>
+#include <sstream>
 #include <thread>
 #include <vector>
 
 using namespace std::chrono_literals;
 
+std::vector<std::tuple<time_t, time_t>> loadTaskset() {
+  std::ifstream filestream("/Users/abdulhakeemabdulrahman/research/"
+                           "rts-simulator-py/rts-simulator/taskset.example");
+  if (!filestream.is_open()) {
+    std::cout << "Failed to open file!" << std::endl;
+    return {};
+  }
+
+  std::string line;
+  std::getline(filestream, line);
+  auto U = std::stod(line);
+
+  std::getline(filestream, line);
+  auto N = std::stoi(line);
+
+  std::vector<std::tuple<time_t, time_t>> tasks;
+  for (int i = 0; i < N; i++) {
+    std::getline(filestream, line);
+    std::istringstream linestream(line);
+    time_t C, T;
+    char sep;
+    if (linestream >> C >> sep >> T) {
+      std::cout << C << "/" << T << std::endl;
+      tasks.emplace_back(C, T);
+    }
+  }
+
+  return tasks;
+}
+
 int main() {
+  auto tasks = loadTaskset();
   TaskSystem system = TaskSystem(2);
 
-  system.addTask(Task::Parameters{1, 2});
-  system.addTask(Task::Parameters{3, 6});
-
-  system.addTask(Task::Parameters{1, 3});
-  system.addTask(Task::Parameters{2, 9});
-  system.addTask(Task::Parameters{2, 9});
-  // system.addTask(Task::Parameters{2, 9});
+  for (auto &task : tasks) {
+    auto [C, T] = task;
+    system.addTask(Task::Parameters{C, T});
+  }
 
   TaskSystem systemSnapshot(std::move(system));
   system = std::move(systemSnapshot);
