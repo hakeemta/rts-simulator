@@ -247,13 +247,12 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
   idleTasks(_completedTasks);
 
   _t += dt;
-  _timer->increment(_dt);
+  _timer->increment(dt);
   // Wait for any awaken threads
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
   for (auto &task : _dispatchedTasks) {
     if (!task->stepped(_t)) {
-      // if (!task->step(_t)) {
       continue;
     }
 
