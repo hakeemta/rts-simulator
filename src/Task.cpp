@@ -3,7 +3,10 @@
 #include <cassert>
 #include <iostream>
 #include <stdexcept>
+#include <thread>
 #include <vector>
+
+std::mutex Task::_mutex;
 
 Task::Task(Parameters params) : _params(params), _attrs(params) {
   /* Initializes a task and validates its utilization.
@@ -15,10 +18,12 @@ Task::Task(Parameters params) : _params(params), _attrs(params) {
 
 Task::Task(const Task &source) {
   _id = source._id;
-  _t = source._t;
   _params = source._params;
   _attrs = source._attrs;
   _status = source._status;
+
+  _t = source._t;
+  _timer = source._timer;
 
   if (source._processor != nullptr) {
     _processor = std::make_unique<Processor>(*(source._processor));
@@ -31,10 +36,12 @@ Task &Task::operator=(const Task &source) {
   }
 
   _id = source._id;
-  _t = source._t;
   _params = source._params;
   _attrs = source._attrs;
   _status = source._status;
+
+  _t = source._t;
+  _timer = source._timer;
 
   if (source._processor != nullptr) {
     _processor = std::make_unique<Processor>(*(source._processor));
@@ -43,20 +50,14 @@ Task &Task::operator=(const Task &source) {
   return *this;
 }
 
-void Task::invalidate() {
-  _id = 0;
-  _t = 0;
-  _params = Parameters();
-  _attrs = Attributes();
-  _status = Status::IDLE;
-}
-
 Task::Task(Task &&source) {
   _id = source._id;
-  _t = source._t;
   _params = source._params;
   _attrs = source._attrs;
   _status = source._status;
+
+  _t = source._t;
+  _timer = source._timer;
 
   if (source._processor != nullptr) {
     _processor = std::move(source._processor);
@@ -71,10 +72,12 @@ Task &Task::operator=(Task &&source) {
   }
 
   _id = source._id;
-  _t = source._t;
   _params = source._params;
   _attrs = source._attrs;
   _status = source._status;
+
+  _t = source._t;
+  _timer = source._timer;
 
   if (source._processor != nullptr) {
     _processor = std::move(source._processor);
@@ -84,7 +87,16 @@ Task &Task::operator=(Task &&source) {
   return *this;
 }
 
-Task::~Task() {}
+Task::~Task() { releaseThread(); }
+
+void Task::invalidate() {
+  _id = 0;
+  _params = Parameters();
+  _attrs = Attributes();
+  _status = Status::IDLE;
+
+  _t = 0;
+}
 
 void Task::update(bool reload) {
   if (reload) {
@@ -94,6 +106,19 @@ void Task::update(bool reload) {
 
   _attrs.Lt = _attrs.Dt - _attrs.Ct;
   _attrs.Rt = _params.D - _attrs.Lt;
+}
+
+void Task::asyncStep() {
+  std::unique_lock<std::mutex> lck(_mutex);
+  std::cout << "[t=" << _t << "]Stepping " << id() << " on "
+            << std::this_thread::get_id() << std::endl;
+  lck.unlock();
+
+  if (auto _timerTemp = _timer.lock()) {
+    _timerTemp->synchronize(_t);
+  }
+
+  _doneDispatched = true;
 }
 
 void Task::reset(bool start) {
@@ -110,7 +135,14 @@ bool Task::ready() {
   return (_status == Status::IDLE) || (_status == Status::RUNNING);
 }
 
-void Task::allocate(std::unique_ptr<Processor> processor, time_t delta) {
+void Task::releaseThread() {
+  if (_thread != nullptr) {
+    _thread->join();
+    _thread = nullptr;
+  }
+}
+
+void Task::dispatch(ProcessorPtr processor, time_t delta) {
   if (processor == nullptr) {
     if (_status == Status::RUNNING) {
       _status = Status::IDLE;
@@ -135,15 +167,12 @@ void Task::allocate(std::unique_ptr<Processor> processor, time_t delta) {
     throw std::out_of_range("Task deadline miss!");
   }
 
+  _doneDispatched = false;
+  _thread = std::make_unique<std::thread>(&Task::asyncStep, this);
+
   auto next_r = _params.O + (_attrs.releases * _params.T);
   if (_t >= next_r) {
     _attrs.releases += 1;
     reset(false);
   }
 }
-
-std::unique_ptr<Processor> Task::releaseProcessor() {
-  return std::move(_processor);
-}
-
-bool Task::step(const time_t t) { return _t == t; }

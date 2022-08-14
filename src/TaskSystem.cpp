@@ -10,6 +10,17 @@
 int Task::_idCount = 0;
 int Processor::_idCount = 0;
 
+void Timer::increment(time_t dt) {
+  std::lock_guard<std::mutex> lock(_mutex);
+  _value += dt;
+  _condition.notify_all();
+}
+
+void Timer::synchronize(const time_t next) {
+  std::unique_lock<std::mutex> lock(_mutex);
+  _condition.wait(lock, [this, &next] { return _value == next; });
+}
+
 template <class T>
 void copy(std::vector<std::unique_ptr<T>> &dest,
           const std::vector<std::unique_ptr<T>> &src) {
@@ -21,7 +32,7 @@ void copy(std::vector<std::unique_ptr<T>> &dest,
 }
 
 template <class T> void refresh(std::vector<std::unique_ptr<T>> &v) {
-  /* Purges null (allocated) entities.
+  /* Purges null (dispatched) entities.
    */
   v.erase(std::remove_if(v.begin(), v.end(),
                          [](auto &entity) { return entity == nullptr; }),
@@ -34,13 +45,16 @@ TaskSystem::TaskSystem(int m) : _m(m) {
   for (int i = 0; i < m; i++) {
     _processors.emplace_back(std::make_unique<Processor>());
   }
+  _timer = std::make_shared<Timer>();
 };
 
 TaskSystem::TaskSystem(const TaskSystem &source) {
   _m = source._m;
-  _t = source._t;
   _util = source._util;
+
+  _t = source._t;
   _dt = source._dt;
+  // _timer = source._timer;
 
   copy(_ready, source._ready);
   copy(_dispatched, source._dispatched);
@@ -54,9 +68,11 @@ TaskSystem &TaskSystem::operator=(const TaskSystem &source) {
   }
 
   _m = source._m;
-  _t = source._t;
   _util = source._util;
+
+  _t = source._t;
   _dt = source._dt;
+  _timer = source._timer;
 
   copy(_ready, source._ready);
   copy(_dispatched, source._dispatched);
@@ -66,18 +82,13 @@ TaskSystem &TaskSystem::operator=(const TaskSystem &source) {
   return *this;
 }
 
-void TaskSystem::invalidate() {
-  _m = 1;
-  _t = 0;
-  _util = 0;
-  _dt = 0;
-}
-
 TaskSystem::TaskSystem(TaskSystem &&source) {
   _m = source._m;
-  _t = source._t;
   _util = source._util;
+
+  _t = source._t;
   _dt = source._dt;
+  _timer = std::move(source._timer);
 
   _ready = std::move(source._ready);
   _dispatched = std::move(source._dispatched);
@@ -93,9 +104,11 @@ TaskSystem &TaskSystem::operator=(TaskSystem &&source) {
   }
 
   _m = source._m;
-  _t = source._t;
   _util = source._util;
+
+  _t = source._t;
   _dt = source._dt;
+  _timer = std::move(source._timer);
 
   _ready = std::move(source._ready);
   _dispatched = std::move(source._dispatched);
@@ -106,61 +119,11 @@ TaskSystem &TaskSystem::operator=(TaskSystem &&source) {
   return *this;
 }
 
-void TaskSystem::addTask(Task::Parameters params) {
-  /* Creates a new task and validates its utilization.
-     Recomputes the system's timing attributes
-     and adds the task to ready.
-   */
-
-  auto task = std::make_unique<Task>(params);
-  if (task->util() == 0) {
-    return;
-  }
-  _util += task->util();
-  assert(_util <= _m);
-
-  Task::Parameters p = task->params();
-  std::vector<time_t> v{p.C, p.D, p.T};
-  _dt = std::reduce(v.begin(), v.end(), _dt,
-                    [](const time_t &init, const time_t &first) {
-                      return std::gcd(init, first);
-                    });
-  _L = std::lcm(_L, p.T);
-
-  _ready.emplace_back(std::move(task));
-  _n += 1;
-}
-
-void TaskSystem::acquireResources(std::unique_ptr<Task> &task) {
-  /* Releases processors from tasks to the pool.
-   */
-  auto processor = task->releaseProcessor();
-  if (processor != nullptr) {
-    _processors.emplace_back(std::move(processor));
-  }
-}
-
-void TaskSystem::reset() {
-  /* Acquires any resources from the disptached tasks.
-     Returns all tasks to ready and resets them.
-  */
+void TaskSystem::invalidate() {
+  _m = 1;
+  _util = 0;
   _t = 0;
-
-  for (auto &task : _dispatched) {
-    acquireResources(task);
-    _ready.emplace_back(std::move(task));
-  }
-
-  for (auto &task : _completed) {
-    _ready.emplace_back(std::move(task));
-  }
-
-  for (auto &task : _ready) {
-    task->reset();
-  }
-
-  refresh(_dispatched);
-  refresh(_completed);
+  _dt = 0;
 }
 
 TaskState TaskSystem::getState(const TaskSubSet &tasks) {
@@ -202,7 +165,7 @@ void TaskSystem::runTasks(const std::vector<int> &indices, time_t dt) {
   for (int k = 0; k < indices.size(); k++) {
     const auto &i = indices[k];
     auto &task = _dispatched.emplace_back(std::move(_ready[i]));
-    task->allocate(std::move(_processors[k]), dt);
+    task->dispatch(std::move(_processors[k]), dt);
   }
 
   refresh(_processors);
@@ -214,10 +177,69 @@ void TaskSystem::idleTasks(TaskSubSet &tasks, time_t dt) {
    */
 
   for (auto &task : tasks) {
-    task->allocate(nullptr, dt);
+    task->dispatch(nullptr, dt);
     _dispatched.emplace_back(std::move(task));
   }
   tasks.clear();
+}
+
+void TaskSystem::acquireResources(TaskPtr &task) {
+  /* Releases processors and threads from tasks to the pool.
+   */
+  task->releaseThread();
+  auto processor = task->releaseProcessor();
+  if (processor != nullptr) {
+    _processors.emplace_back(std::move(processor));
+  }
+}
+
+void TaskSystem::addTask(Task::Parameters params) {
+  /* Creates a new task and validates its utilization.
+     Recomputes the system's timing attributes
+     and adds the task to ready.
+   */
+
+  auto task = std::make_unique<Task>(params);
+  if (task->util() == 0) {
+    return;
+  }
+  _util += task->util();
+  assert(_util <= _m);
+
+  Task::Parameters p = task->params();
+  std::vector<time_t> v{p.C, p.D, p.T};
+  _dt = std::reduce(v.begin(), v.end(), _dt,
+                    [](const time_t &init, const time_t &first) {
+                      return std::gcd(init, first);
+                    });
+  _L = std::lcm(_L, p.T);
+
+  task->linkTimer(_timer);
+  _ready.emplace_back(std::move(task));
+  _n += 1;
+}
+
+void TaskSystem::reset() {
+  /* Acquires any resources from the disptached tasks.
+     Returns all tasks to ready and resets them.
+  */
+  _t = 0;
+
+  for (auto &task : _dispatched) {
+    acquireResources(task);
+    _ready.emplace_back(std::move(task));
+  }
+
+  for (auto &task : _completed) {
+    _ready.emplace_back(std::move(task));
+  }
+
+  for (auto &task : _ready) {
+    task->reset();
+  }
+
+  refresh(_dispatched);
+  refresh(_completed);
 }
 
 TaskState TaskSystem::operator()(const std::vector<int> &indices,
@@ -234,10 +256,19 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
   idleTasks(_completed);
 
   _t += dt;
+  _timer->increment(_dt);
+
+  // Hopefully wait for other ready/awaken threads
+  std::this_thread::sleep_for(std::chrono::milliseconds(1));
+  /////////////////////////////////
+
   for (auto &task : _dispatched) {
-    if (!task->step(_t)) {
+    if (!task->stepped()) {
+      // if (!task->step(_t)) {
       continue;
     }
+
+    std::cout << task->id() << " stepped!" << std::endl;
 
     acquireResources(task);
     if (task->ready()) {

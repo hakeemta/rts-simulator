@@ -4,10 +4,14 @@
 #include <Processor.hpp>
 #include <ctime>
 #include <memory>
+#include <mutex>
 #include <vector>
 
 // Forward declaration to avoid cyclic includes
 class TaskSystem;
+class Timer;
+
+using ProcessorPtr = std::unique_ptr<Processor>;
 
 class Task {
 public:
@@ -48,28 +52,36 @@ public:
 
   int id() const { return _id; };
   double util() const { return _params.U; };
-  void reset(bool start = true);
   const Parameters &params() const { return _params; };
   const Attributes &attrs() const { return _attrs; };
 
+  void reset(bool start = true);
   bool ready();
-  void allocate(std::unique_ptr<Processor> processor = nullptr,
-                time_t delta = 1);
-  std::unique_ptr<Processor> releaseProcessor();
-  bool step(const time_t t);
+  ProcessorPtr releaseProcessor() { return std::move(_processor); };
+  void releaseThread();
+  void linkTimer(std::weak_ptr<Timer> timer) { _timer = timer; };
+  bool step(const time_t t) { return _t == t; };
+  bool stepped() { return _doneDispatched; }
+  void dispatch(ProcessorPtr processor = nullptr, time_t delta = 1);
 
 private:
   time_t _t{0};
   Parameters _params;
   Attributes _attrs;
   Status _status{Status::IDLE};
-  std::unique_ptr<Processor> _processor;
 
-  void update(bool reload = true);
+  ProcessorPtr _processor;
+  std::weak_ptr<Timer> _timer;
+  bool _doneDispatched{false};
+  std::unique_ptr<std::thread> _thread;
+
   void invalidate();
+  void update(bool reload = true);
+  void asyncStep();
 
   int _id;
-  static int _idCount; // global variable for counting task object ids
+  static int _idCount;      // Global variable for counting task object ids
+  static std::mutex _mutex; // Shared by all tasks for protecting cout
 };
 
 #endif
