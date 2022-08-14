@@ -7,10 +7,6 @@
 #include <mutex>
 #include <vector>
 
-// Forward declaration to avoid cyclic includes
-class TaskSystem;
-class Timer;
-
 using ProcessorPtr = std::unique_ptr<Processor>;
 
 class Task {
@@ -48,7 +44,7 @@ public:
   Task &operator=(const Task &source);
   Task(Task &&source);
   Task &operator=(Task &&source);
-  ~Task();
+  ~Task(){};
 
   int id() const { return _id; };
   double util() const { return _params.U; };
@@ -58,30 +54,24 @@ public:
   void reset(bool start = true);
   bool ready();
   ProcessorPtr releaseProcessor() { return std::move(_processor); };
-  void releaseThread();
-  void linkTimer(std::shared_ptr<Timer> timer) { _timer = timer; };
-  bool step(const time_t t) { return _t == t; };
-  bool stepped() { return _doneDispatched; }
-  void dispatch(ProcessorPtr processor = nullptr, time_t delta = 1);
+  virtual bool stepped(const time_t t) { return _t == t; };
+  virtual void dispatch(ProcessorPtr processor = nullptr, time_t dt = 1);
+
+protected:
+  time_t _t{0};
 
 private:
-  time_t _t{0};
   Parameters _params;
   Attributes _attrs;
   Status _status{Status::IDLE};
 
   ProcessorPtr _processor;
-  std::shared_ptr<Timer> _timer;
-  bool _doneDispatched{false};
-  std::unique_ptr<std::thread> _thread;
 
   void invalidate();
   void update(bool reload = true);
-  void asyncStep();
 
   int _id;
-  static int _idCount;      // Global variable for counting task object ids
-  static std::mutex _mutex; // Shared by all tasks for protecting cout
+  static int _idCount; // Global variable for counting task object ids
 };
 
 #endif
