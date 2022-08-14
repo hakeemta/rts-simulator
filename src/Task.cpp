@@ -1,14 +1,11 @@
 #include <Task.hpp>
 #include <cassert>
-#include <iostream>
-#include <stdexcept>
-#include <vector>
 
-Task::Task(Parameters params) : _params(params), _attrs(params) {
+Task::Task(Parameters params)
+    : Resource(_idCount++), _params(params), _attrs(params) {
   /* Initializes a task and validates its utilization.
    */
   assert(_params.U <= 1.0);
-  _id = _idCount++;
   reset();
 }
 

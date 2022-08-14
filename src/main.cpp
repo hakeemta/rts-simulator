@@ -1,11 +1,10 @@
-#include <cmath>
-#include <iostream>
-#include <vector>
-
 #include <TaskSystem.hpp>
 #include <algorithms/PFair.hpp>
 #include <chrono>
+#include <cmath>
+#include <iostream>
 #include <thread>
+#include <vector>
 
 using namespace std::chrono_literals;
 
@@ -28,7 +27,7 @@ int main() {
   auto state = system.readyState();
   int m = system.M();
   time_t t = 0;
-  for (int i = 0; i < 2000; i++) {
+  for (int i = 0; i < 400; i++) {
     if (i != 0 && i % 100 == 0) {
       system.reset();
       // TaskSystem systemSnapshot(system);

@@ -2,14 +2,13 @@
 #define TASK_HPP
 
 #include <Processor.hpp>
+#include <Resource.hpp>
 #include <ctime>
 #include <memory>
-#include <mutex>
-#include <vector>
 
 using ProcessorPtr = std::unique_ptr<Processor>;
 
-class Task {
+class Task : public Resource {
 public:
   enum class Status { IDLE, RUNNING, COMPLETED };
 
@@ -46,7 +45,6 @@ public:
   Task &operator=(Task &&source);
   ~Task(){};
 
-  int id() const { return _id; };
   double util() const { return _params.U; };
   const Parameters &params() const { return _params; };
   const Attributes &attrs() const { return _attrs; };
@@ -70,7 +68,6 @@ private:
   void invalidate();
   void update(bool reload = true);
 
-  int _id;
   static int _idCount; // Global variable for counting task object ids
 };
 

@@ -1,8 +1,6 @@
 #include <AsyncTask.hpp>
 #include <iostream>
-#include <stdexcept>
 #include <thread>
-#include <vector>
 
 AsyncTask::AsyncTask(Parameters params) : Task(params) {}
 
