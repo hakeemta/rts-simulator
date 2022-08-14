@@ -110,14 +110,11 @@ void Task::update(bool reload) {
 
 void Task::asyncStep() {
   std::unique_lock<std::mutex> lck(_mutex);
-  std::cout << "[t=" << _t << "]Stepping " << id() << " on "
+  std::cout << "[t=" << _t << "] Stepping " << id() << " on "
             << std::this_thread::get_id() << std::endl;
   lck.unlock();
 
-  if (auto _timerTemp = _timer.lock()) {
-    _timerTemp->synchronize(_t);
-  }
-
+  _timer->synchronize(_t);
   _doneDispatched = true;
 }
 

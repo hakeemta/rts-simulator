@@ -54,7 +54,7 @@ TaskSystem::TaskSystem(const TaskSystem &source) {
 
   _t = source._t;
   _dt = source._dt;
-  // _timer = source._timer;
+  _timer = source._timer;
 
   copy(_ready, source._ready);
   copy(_dispatched, source._dispatched);
@@ -257,10 +257,8 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
 
   _t += dt;
   _timer->increment(_dt);
-
-  // Hopefully wait for other ready/awaken threads
-  std::this_thread::sleep_for(std::chrono::milliseconds(1));
-  /////////////////////////////////
+  // Wait for any awaken threads
+  std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
   for (auto &task : _dispatched) {
     if (!task->stepped()) {
@@ -269,7 +267,6 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
     }
 
     std::cout << task->id() << " stepped!" << std::endl;
-
     acquireResources(task);
     if (task->ready()) {
       _ready.emplace_back(std::move(task));

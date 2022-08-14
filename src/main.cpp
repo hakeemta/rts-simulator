@@ -28,8 +28,8 @@ int main() {
   auto state = system.readyState();
   int m = system.M();
   time_t t = 0;
-  for (int i = 0; i < 18000; i++) {
-    if (i != 0 && i % 200 == 0) {
+  for (int i = 0; i < 2000; i++) {
+    if (i != 0 && i % 100 == 0) {
       //      system.reset();
       TaskSystem systemSnapshot(system);
       system = systemSnapshot;
@@ -42,9 +42,9 @@ int main() {
 
     state = system.operator()(indices);
     auto completed = system.completedState();
-    std::cout << "Time done: " << system.T() << std::endl;
-
-    // std::this_thread::sleep_for(50ms);
+    std::cout << "Time done: " << system.T() << " on "
+              << std::this_thread::get_id() << std::endl
+              << std::endl;
   }
 
   return 0;

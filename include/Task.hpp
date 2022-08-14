@@ -59,7 +59,7 @@ public:
   bool ready();
   ProcessorPtr releaseProcessor() { return std::move(_processor); };
   void releaseThread();
-  void linkTimer(std::weak_ptr<Timer> timer) { _timer = timer; };
+  void linkTimer(std::shared_ptr<Timer> timer) { _timer = timer; };
   bool step(const time_t t) { return _t == t; };
   bool stepped() { return _doneDispatched; }
   void dispatch(ProcessorPtr processor = nullptr, time_t delta = 1);
@@ -71,7 +71,7 @@ private:
   Status _status{Status::IDLE};
 
   ProcessorPtr _processor;
-  std::weak_ptr<Timer> _timer;
+  std::shared_ptr<Timer> _timer;
   bool _doneDispatched{false};
   std::unique_ptr<std::thread> _thread;
 
