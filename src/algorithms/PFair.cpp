@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 
-#include "../../include/Task.hpp"
-#include "../../include/algorithms/PFair.hpp"
+#include <PFair.hpp>
+#include <Task.hpp>
 
 namespace PFair {
 double computeLag(time_t t, const Task::Parameters &params,

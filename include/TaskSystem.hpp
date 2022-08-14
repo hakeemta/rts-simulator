@@ -1,31 +1,18 @@
 #ifndef TASK_SYSTEM_HPP
 #define TASK_SYSTEM_HPP
 
+#include <AsyncTask.hpp>
 #include <Processor.hpp>
-#include <Task.hpp>
+#include <Timer.hpp>
 #include <condition_variable>
 #include <memory>
-#include <mutex>
 #include <tuple>
 #include <vector>
 
 using TaskState =
-    std::vector<std::tuple<int, Task::Parameters, Task::Attributes>>;
-using TaskPtr = std::unique_ptr<Task>;
+    std::vector<std::tuple<int, AsyncTask::Parameters, AsyncTask::Attributes>>;
+using TaskPtr = std::unique_ptr<AsyncTask>;
 using TaskSubSet = std::vector<TaskPtr>;
-
-// Auxiliary class to set and access global time in a thread-safe manner
-class Timer {
-public:
-  void increment(time_t dt);
-  void synchronize(const time_t next = 0);
-  void reset() { _value = 0; };
-
-private:
-  time_t _value{0};
-  std::mutex _mutex;
-  std::condition_variable _condition;
-};
 
 class TaskSystem {
 public:
@@ -45,8 +32,8 @@ public:
 
   void addTask(Task::Parameters params);
   void reset();
-  TaskState readyState() { return getState(_ready); };
-  TaskState completedState() { return getState(_completed); };
+  TaskState readyState() { return getState(_readyTasks); };
+  TaskState completedState() { return getState(_completedTasks); };
   TaskState operator()(const std::vector<int> &indices, time_t proportion = 1);
 
 private:
@@ -55,9 +42,9 @@ private:
   double _util{0.0};
 
   std::vector<ProcessorPtr> _processors;
-  TaskSubSet _ready;
-  TaskSubSet _dispatched;
-  TaskSubSet _completed;
+  TaskSubSet _readyTasks;
+  TaskSubSet _dispatchedTasks;
+  TaskSubSet _completedTasks;
 
   time_t _t{0};
   time_t _dt{0};

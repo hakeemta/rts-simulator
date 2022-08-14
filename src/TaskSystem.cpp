@@ -9,17 +9,7 @@
 // Init static variables
 int Task::_idCount = 0;
 int Processor::_idCount = 0;
-
-void Timer::increment(time_t dt) {
-  std::lock_guard<std::mutex> lock(_mutex);
-  _value += dt;
-  _condition.notify_all();
-}
-
-void Timer::synchronize(const time_t next) {
-  std::unique_lock<std::mutex> lock(_mutex);
-  _condition.wait(lock, [this, &next] { return _value == next; });
-}
+std::mutex AsyncTask::_mutex;
 
 template <class T>
 void copy(std::vector<std::unique_ptr<T>> &dest,
@@ -56,9 +46,9 @@ TaskSystem::TaskSystem(const TaskSystem &source) {
   _dt = source._dt;
   _timer = source._timer;
 
-  copy(_ready, source._ready);
-  copy(_dispatched, source._dispatched);
-  copy(_completed, source._completed);
+  copy(_readyTasks, source._readyTasks);
+  copy(_dispatchedTasks, source._dispatchedTasks);
+  copy(_completedTasks, source._completedTasks);
   copy(_processors, source._processors);
 }
 
@@ -74,9 +64,9 @@ TaskSystem &TaskSystem::operator=(const TaskSystem &source) {
   _dt = source._dt;
   _timer = source._timer;
 
-  copy(_ready, source._ready);
-  copy(_dispatched, source._dispatched);
-  copy(_completed, source._completed);
+  copy(_readyTasks, source._readyTasks);
+  copy(_dispatchedTasks, source._dispatchedTasks);
+  copy(_completedTasks, source._completedTasks);
   copy(_processors, source._processors);
 
   return *this;
@@ -90,9 +80,9 @@ TaskSystem::TaskSystem(TaskSystem &&source) {
   _dt = source._dt;
   _timer = std::move(source._timer);
 
-  _ready = std::move(source._ready);
-  _dispatched = std::move(source._dispatched);
-  _completed = std::move(source._completed);
+  _readyTasks = std::move(source._readyTasks);
+  _dispatchedTasks = std::move(source._dispatchedTasks);
+  _completedTasks = std::move(source._completedTasks);
   _processors = std::move(source._processors);
 
   source.invalidate();
@@ -110,9 +100,9 @@ TaskSystem &TaskSystem::operator=(TaskSystem &&source) {
   _dt = source._dt;
   _timer = std::move(source._timer);
 
-  _ready = std::move(source._ready);
-  _dispatched = std::move(source._dispatched);
-  _completed = std::move(source._completed);
+  _readyTasks = std::move(source._readyTasks);
+  _dispatchedTasks = std::move(source._dispatchedTasks);
+  _completedTasks = std::move(source._completedTasks);
   _processors = std::move(source._processors);
 
   source.invalidate();
@@ -158,18 +148,18 @@ void TaskSystem::runTasks(const std::vector<int> &indices, time_t dt) {
   }
 
   auto maxIndex = *std::max_element(indices.begin(), indices.end());
-  if (maxIndex >= _ready.size()) {
+  if (maxIndex >= _readyTasks.size()) {
     throw std::out_of_range("At least one job is out of index!");
   }
 
   for (int k = 0; k < indices.size(); k++) {
     const auto &i = indices[k];
-    auto &task = _dispatched.emplace_back(std::move(_ready[i]));
+    auto &task = _dispatchedTasks.emplace_back(std::move(_readyTasks[i]));
     task->dispatch(std::move(_processors[k]), dt);
   }
 
   refresh(_processors);
-  refresh(_ready);
+  refresh(_readyTasks);
 }
 
 void TaskSystem::idleTasks(TaskSubSet &tasks, time_t dt) {
@@ -178,7 +168,7 @@ void TaskSystem::idleTasks(TaskSubSet &tasks, time_t dt) {
 
   for (auto &task : tasks) {
     task->dispatch(nullptr, dt);
-    _dispatched.emplace_back(std::move(task));
+    _dispatchedTasks.emplace_back(std::move(task));
   }
   tasks.clear();
 }
@@ -199,7 +189,7 @@ void TaskSystem::addTask(Task::Parameters params) {
      and adds the task to ready.
    */
 
-  auto task = std::make_unique<Task>(params);
+  auto task = std::make_unique<AsyncTask>(params);
   if (task->util() == 0) {
     return;
   }
@@ -215,7 +205,7 @@ void TaskSystem::addTask(Task::Parameters params) {
   _L = std::lcm(_L, p.T);
 
   task->linkTimer(_timer);
-  _ready.emplace_back(std::move(task));
+  _readyTasks.emplace_back(std::move(task));
   _n += 1;
 }
 
@@ -226,21 +216,21 @@ void TaskSystem::reset() {
   _t = 0;
   _timer->reset();
 
-  for (auto &task : _dispatched) {
+  for (auto &task : _dispatchedTasks) {
     acquireResources(task);
-    _ready.emplace_back(std::move(task));
+    _readyTasks.emplace_back(std::move(task));
   }
 
-  for (auto &task : _completed) {
-    _ready.emplace_back(std::move(task));
+  for (auto &task : _completedTasks) {
+    _readyTasks.emplace_back(std::move(task));
   }
 
-  for (auto &task : _ready) {
+  for (auto &task : _readyTasks) {
     task->reset();
   }
 
-  refresh(_dispatched);
-  refresh(_completed);
+  refresh(_dispatchedTasks);
+  refresh(_completedTasks);
 }
 
 TaskState TaskSystem::operator()(const std::vector<int> &indices,
@@ -253,16 +243,16 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
 
   auto dt = _dt * proportion;
   runTasks(indices, dt);
-  idleTasks(_ready);
-  idleTasks(_completed);
+  idleTasks(_readyTasks);
+  idleTasks(_completedTasks);
 
   _t += dt;
   _timer->increment(_dt);
   // Wait for any awaken threads
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-  for (auto &task : _dispatched) {
-    if (!task->stepped()) {
+  for (auto &task : _dispatchedTasks) {
+    if (!task->stepped(_t)) {
       // if (!task->step(_t)) {
       continue;
     }
@@ -270,12 +260,12 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
     std::cout << task->id() << " stepped!" << std::endl;
     acquireResources(task);
     if (task->ready()) {
-      _ready.emplace_back(std::move(task));
+      _readyTasks.emplace_back(std::move(task));
     } else {
-      _completed.emplace_back(std::move(task));
+      _completedTasks.emplace_back(std::move(task));
     }
   }
-  refresh(_dispatched);
+  refresh(_dispatchedTasks);
 
   return readyState();
 }
