@@ -30,9 +30,9 @@ int main() {
   time_t t = 0;
   for (int i = 0; i < 2000; i++) {
     if (i != 0 && i % 100 == 0) {
-      //      system.reset();
-      TaskSystem systemSnapshot(system);
-      system = systemSnapshot;
+      system.reset();
+      // TaskSystem systemSnapshot(system);
+      // system = systemSnapshot;
       state = system.readyState();
     }
 

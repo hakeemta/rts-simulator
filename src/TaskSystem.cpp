@@ -224,6 +224,7 @@ void TaskSystem::reset() {
      Returns all tasks to ready and resets them.
   */
   _t = 0;
+  _timer->reset();
 
   for (auto &task : _dispatched) {
     acquireResources(task);

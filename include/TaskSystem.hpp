@@ -19,6 +19,7 @@ class Timer {
 public:
   void increment(time_t dt);
   void synchronize(const time_t next = 0);
+  void reset() { _value = 0; };
 
 private:
   time_t _value{0};
