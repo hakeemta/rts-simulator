@@ -15,7 +15,7 @@ public:
   ~Processor();
 
   int capacity{1};
-  void run(std::unique_ptr<std::thread> thread);
+  void keepThread(std::unique_ptr<std::thread> thread);
   void releaseThread();
 
 private:

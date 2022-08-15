@@ -23,7 +23,7 @@ Processor &Processor::operator=(Processor &&source) {
 
 Processor::~Processor() { releaseThread(); }
 
-void Processor::run(std::unique_ptr<std::thread> thread) {
+void Processor::keepThread(std::unique_ptr<std::thread> thread) {
   _thread = std::move(thread);
 };
 

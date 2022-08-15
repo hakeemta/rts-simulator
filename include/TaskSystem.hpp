@@ -52,8 +52,8 @@ private:
 
   void invalidate();
   TaskState getState(const TaskSubSet &tasks);
-  void runTasks(const std::vector<int> &indices, time_t dt = 1);
-  void idleTasks(TaskSubSet &tasks, time_t dt = 1);
+  void dispatchTasks(const std::vector<int> &indices, time_t dt = 1);
+  void dispatchTasks(TaskSubSet &tasks, time_t dt = 1);
   void acquireResources(TaskPtr &task);
 };
 

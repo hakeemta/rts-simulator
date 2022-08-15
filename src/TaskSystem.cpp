@@ -75,7 +75,7 @@ TaskState TaskSystem::getState(const TaskSubSet &tasks) {
   return state;
 }
 
-void TaskSystem::runTasks(const std::vector<int> &indices, time_t dt) {
+void TaskSystem::dispatchTasks(const std::vector<int> &indices, time_t dt) {
   /* Runs validations for selected task indices
     to check for potential timing faults.
 
@@ -110,8 +110,8 @@ void TaskSystem::runTasks(const std::vector<int> &indices, time_t dt) {
   refresh(_readyTasks);
 }
 
-void TaskSystem::idleTasks(TaskSubSet &tasks, time_t dt) {
-  /* Dispatches (idles) tasks without processors.
+void TaskSystem::dispatchTasks(TaskSubSet &tasks, time_t dt) {
+  /* Idles tasks without processors.
    */
 
   for (auto &task : tasks) {
@@ -190,9 +190,9 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
   */
 
   auto dt = _dt * proportion;
-  runTasks(indices, dt);
-  idleTasks(_readyTasks);
-  idleTasks(_completedTasks);
+  dispatchTasks(indices, dt);
+  dispatchTasks(_readyTasks);
+  dispatchTasks(_completedTasks);
 
   _t += dt;
   _timer->increment(dt);

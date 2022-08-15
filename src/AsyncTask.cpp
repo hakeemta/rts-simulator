@@ -34,7 +34,7 @@ void AsyncTask::dispatch(ProcessorPtr processor, time_t dt) {
   _doneDispatched = false;
   if (_processor != nullptr) {
     auto thread = std::make_unique<std::thread>(&AsyncTask::step, this);
-    _processor->run(std::move(thread));
+    _processor->keepThread(std::move(thread));
   }
 }
 
