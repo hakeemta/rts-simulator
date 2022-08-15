@@ -15,4 +15,12 @@ void copy(std::vector<std::unique_ptr<T>> &dest,
       [](const auto &entity) { return std::make_unique<T>(*entity); });
 }
 
+template <class T> void refresh(std::vector<std::unique_ptr<T>> &v) {
+  /* Purges null (dispatched) entities.
+   */
+  v.erase(std::remove_if(v.begin(), v.end(),
+                         [](auto &entity) { return entity == nullptr; }),
+          v.end());
+}
+
 #endif

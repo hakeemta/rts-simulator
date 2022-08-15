@@ -4,19 +4,12 @@
 #include <numeric>
 #include <set>
 #include <thread>
+#include <utils.hpp>
 
 // Init static variables
 int Task::_idCount = 0;
 int Processor::_idCount = 0;
 std::mutex AsyncTask::_mutex;
-
-template <class T> void refresh(std::vector<std::unique_ptr<T>> &v) {
-  /* Purges null (dispatched) entities.
-   */
-  v.erase(std::remove_if(v.begin(), v.end(),
-                         [](auto &entity) { return entity == nullptr; }),
-          v.end());
-}
 
 TaskSystem::TaskSystem(int m) : _m(m) {
   /* Initializes the task system with the set number of processors.
