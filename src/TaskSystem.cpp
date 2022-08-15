@@ -137,7 +137,7 @@ void TaskSystem::addTask(Task::Parameters params) {
      and adds the task to ready.
    */
 
-  auto task = std::make_unique<AsyncTask>(params);
+  auto task = std::make_unique<AsyncTask>(params, _timer);
   if (task->util() == 0) {
     return;
   }
@@ -152,7 +152,6 @@ void TaskSystem::addTask(Task::Parameters params) {
                     });
   _L = std::lcm(_L, p.T);
 
-  task->linkTimer(_timer);
   _readyTasks.emplace_back(std::move(task));
   _n += 1;
 }

@@ -9,14 +9,13 @@
 
 class AsyncTask : public Task {
 public:
-  AsyncTask(Parameters params);
+  AsyncTask(Parameters params, std::shared_ptr<Timer> timer);
   AsyncTask(const AsyncTask &source) = delete;
   AsyncTask &operator=(const AsyncTask &source) = delete;
   AsyncTask(AsyncTask &&source);
   AsyncTask &operator=(AsyncTask &&source);
   ~AsyncTask(){};
 
-  void linkTimer(std::shared_ptr<Timer> timer) { _timer = timer; };
   void dispatch(ProcessorPtr processor = nullptr, time_t dt = 1) override;
   bool stepped(const time_t t) override;
 

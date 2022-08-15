@@ -2,7 +2,8 @@
 #include <iostream>
 #include <thread>
 
-AsyncTask::AsyncTask(Parameters params) : Task(params) {}
+AsyncTask::AsyncTask(Parameters params, std::shared_ptr<Timer> timer)
+    : _timer{timer}, Task(params) {}
 
 AsyncTask::AsyncTask(AsyncTask &&source)
     : _timer(std::move(source._timer)), Task(std::move(source)) {}
