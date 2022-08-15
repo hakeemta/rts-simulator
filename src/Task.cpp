@@ -2,7 +2,7 @@
 #include <cassert>
 
 Task::Task(Parameters params)
-    : Resource(_idCount++), _params(params), _attrs(params) {
+    : Resource(++_idCount), _params(params), _attrs(params) {
   /* Initializes a task and validates its utilization.
    */
   assert(_params.U <= 1.0);

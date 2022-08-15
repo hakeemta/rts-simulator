@@ -33,7 +33,6 @@ std::vector<std::tuple<time_t, time_t>> loadTaskset() {
     time_t C, T;
     char sep;
     if (linestream >> C >> sep >> T) {
-      std::cout << C << "/" << T << std::endl;
       tasks.emplace_back(C, T);
     }
   }
@@ -58,11 +57,11 @@ int main() {
   auto state = system.readyState();
   int m = system.M();
   time_t t = 0;
-  for (int i = 0; i < 400; i++) {
+  for (int i = 0; i < 40; i++) {
     if (i != 0 && i % 100 == 0) {
-      system.reset();
-      // TaskSystem systemSnapshot(system);
-      // system = systemSnapshot;
+      // system.reset();
+      TaskSystem systemSnapshot(system);
+      system = systemSnapshot;
       state = system.readyState();
     }
 
@@ -72,8 +71,8 @@ int main() {
 
     state = system.operator()(indices);
     auto completed = system.completedState();
-    std::cout << "Time done: " << system.T() << " on "
-              << std::this_thread::get_id() << std::endl
+    std::cout << "[t=" << system.T() << "] Dispatcher on main proc. ["
+              << std::this_thread::get_id() << "]" << std::endl
               << std::endl;
   }
 

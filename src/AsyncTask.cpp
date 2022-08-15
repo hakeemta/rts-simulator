@@ -36,8 +36,9 @@ AsyncTask::~AsyncTask() { releaseThread(); }
 
 void AsyncTask::asyncStep() {
   std::unique_lock<std::mutex> lck(_mutex);
-  std::cout << "[t=" << _t << "] Stepping " << id() << " on "
-            << std::this_thread::get_id() << std::endl;
+  std::cout << "[t=" << _t << "] Task " << id() << " on proc. "
+            << _processor->id() << " [" << std::this_thread::get_id() << "]"
+            << std::endl;
   lck.unlock();
 
   _timer->synchronize(_t);

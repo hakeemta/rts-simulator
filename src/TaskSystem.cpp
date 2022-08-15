@@ -256,7 +256,7 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
       continue;
     }
 
-    std::cout << task->id() << " stepped!" << std::endl;
+    // std::cout << task->id() << " stepped!" << std::endl;
     acquireResources(task);
     if (task->ready()) {
       _readyTasks.emplace_back(std::move(task));
