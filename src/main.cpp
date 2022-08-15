@@ -11,11 +11,11 @@
 
 using namespace std::chrono_literals;
 
-std::vector<std::tuple<time_t, time_t>> loadTaskset() {
-  std::ifstream filestream("/Users/abdulhakeemabdulrahman/research/"
-                           "rts-simulator-py/rts-simulator/taskset.example");
+std::vector<std::tuple<time_t, time_t>>
+loadTaskset(const std::string &filename) {
+  std::ifstream filestream(filename);
   if (!filestream.is_open()) {
-    std::cout << "Failed to open file!" << std::endl;
+    std::cout << "Failed to open file: " << filename << std::endl;
     return {};
   }
 
@@ -40,24 +40,38 @@ std::vector<std::tuple<time_t, time_t>> loadTaskset() {
   return tasks;
 }
 
-int main() {
-  auto tasks = loadTaskset();
-  TaskSystem system = TaskSystem(2);
+int main(int argc, char **argv) {
+  std::string str;
+  std::for_each(argv + 1, argv + argc,
+                [&](const char *c_str) { str += std::string(c_str) + " "; });
 
+  std::string filename;
+  int m = 2, L = 0; // m is number of processors and L is number of steps
+  if (!str.empty()) {
+    std::istringstream strStream(str);
+    strStream >> filename >> m >> L;
+  }
+
+  auto tasks = loadTaskset(filename);
+  if (tasks.empty()) {
+    return 0;
+  }
+
+  TaskSystem system = TaskSystem(m);
   for (auto &task : tasks) {
     auto [C, T] = task;
     system.addTask(Task::Parameters{C, T});
   }
-
-  TaskSystem systemSnapshot(std::move(system));
-  system = std::move(systemSnapshot);
-  assert(systemSnapshot.util() == 0.0);
-  std::cout << "Total Util.: " << system.util() << std::endl;
+  if (L == 0) {
+    L = system.L();
+  }
+  std::cout << "Filename:" << filename << ", #Procs.:" << m << ", #Steps: " << L
+            << std::endl;
+  std::cout << "Total Util.: " << system.util() << std::endl << std::endl;
 
   auto state = system.readyState();
-  int m = system.M();
   time_t t = 0;
-  for (int i = 0; i < 400; i++) {
+  for (int i = 0; i < L; i++) {
     if (i != 0 && i % 100 == 0) {
       // system.reset();
       TaskSystem systemSnapshot(std::move(system));
