@@ -157,6 +157,18 @@ void TaskSystem::addTask(Task::Parameters params) {
   _n += 1;
 }
 
+void TaskSystem::loadTasks(std::string filename) {
+  auto tasks = loadTaskset(filename);
+  if (tasks.empty()) {
+    return;
+  }
+
+  for (auto &task : tasks) {
+    auto [C, T] = task;
+    addTask(Task::Parameters{C, T});
+  }
+}
+
 void TaskSystem::reset() {
   /* Acquires any resources from the disptached tasks.
      Returns all tasks to ready and resets them.

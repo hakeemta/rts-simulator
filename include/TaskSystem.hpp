@@ -30,6 +30,7 @@ public:
   const time_t L() const { return _L; };
 
   void addTask(Task::Parameters params);
+  void loadTasks(std::string filename);
   void reset();
   TaskState readyState() { return getState(_readyTasks); };
   TaskState completedState() { return getState(_completedTasks); };

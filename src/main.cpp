@@ -2,43 +2,12 @@
 #include <algorithms/PFair.hpp>
 #include <chrono>
 #include <cmath>
-#include <fstream>
 #include <functional>
-#include <iostream>
 #include <sstream>
 #include <thread>
 #include <vector>
 
 using namespace std::chrono_literals;
-
-std::vector<std::tuple<time_t, time_t>>
-loadTaskset(const std::string &filename) {
-  std::ifstream filestream(filename);
-  if (!filestream.is_open()) {
-    std::cout << "Failed to open file: " << filename << std::endl;
-    return {};
-  }
-
-  std::string line;
-  std::getline(filestream, line);
-  auto U = std::stod(line);
-
-  std::getline(filestream, line);
-  auto N = std::stoi(line);
-
-  std::vector<std::tuple<time_t, time_t>> tasks;
-  for (int i = 0; i < N; i++) {
-    std::getline(filestream, line);
-    std::istringstream linestream(line);
-    time_t C, T;
-    char sep;
-    if (linestream >> C >> sep >> T) {
-      tasks.emplace_back(C, T);
-    }
-  }
-
-  return tasks;
-}
 
 int main(int argc, char **argv) {
   std::string str;
@@ -52,16 +21,8 @@ int main(int argc, char **argv) {
     strStream >> filename >> m >> L;
   }
 
-  auto tasks = loadTaskset(filename);
-  if (tasks.empty()) {
-    return 0;
-  }
-
   TaskSystem system = TaskSystem(m);
-  for (auto &task : tasks) {
-    auto [C, T] = task;
-    system.addTask(Task::Parameters{C, T});
-  }
+  system.loadTasks(filename);
   if (L == 0) {
     L = system.L();
   }
