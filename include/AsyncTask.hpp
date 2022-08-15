@@ -14,19 +14,17 @@ public:
   AsyncTask &operator=(const AsyncTask &source);
   AsyncTask(AsyncTask &&source);
   AsyncTask &operator=(AsyncTask &&source);
-  ~AsyncTask();
+  ~AsyncTask(){};
 
-  void releaseThread();
   void linkTimer(std::shared_ptr<Timer> timer) { _timer = timer; };
-  bool stepped(const time_t t) override { return _doneDispatched; }
   void dispatch(ProcessorPtr processor = nullptr, time_t dt = 1) override;
+  bool stepped(const time_t t) override;
 
 private:
   std::shared_ptr<Timer> _timer;
   bool _doneDispatched{false};
-  std::unique_ptr<std::thread> _thread;
 
-  void asyncStep();
+  void step();
   static std::mutex _mutex; // Shared by all tasks for protecting cout
 };
 

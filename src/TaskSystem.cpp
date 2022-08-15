@@ -176,9 +176,9 @@ void TaskSystem::idleTasks(TaskSubSet &tasks, time_t dt) {
 void TaskSystem::acquireResources(TaskPtr &task) {
   /* Releases processors and threads from tasks to the pool.
    */
-  task->releaseThread();
   auto processor = task->releaseProcessor();
   if (processor != nullptr) {
+    processor->releaseThread();
     _processors.emplace_back(std::move(processor));
   }
 }

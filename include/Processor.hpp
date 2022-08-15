@@ -2,14 +2,25 @@
 #define PROCESSOR_HPP
 
 #include <Resource.hpp>
+#include <memory>
+#include <thread>
 
 class Processor : public Resource {
 public:
-  Processor() : Resource(_idCount++) {}
+  Processor();
+  Processor(const Processor &source);
+  Processor &operator=(const Processor &source);
+  Processor(Processor &&source);
+  Processor &operator=(Processor &&source);
+  ~Processor();
+
   int capacity{1};
+  void run(std::unique_ptr<std::thread> thread);
+  void releaseThread();
 
 private:
-  static int _idCount; // global variable for counting processor object ids
+  std::unique_ptr<std::thread> _thread;
+  static int _idCount; // Global variable for counting processor object ids
 };
 
 #endif

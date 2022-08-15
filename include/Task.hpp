@@ -57,13 +57,12 @@ public:
 
 protected:
   time_t _t{0};
+  ProcessorPtr _processor;
 
 private:
   Parameters _params;
   Attributes _attrs;
   Status _status{Status::IDLE};
-
-  ProcessorPtr _processor;
 
   void invalidate();
   void update(bool reload = true);
