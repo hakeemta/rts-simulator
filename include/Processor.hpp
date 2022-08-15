@@ -8,8 +8,8 @@
 class Processor : public Resource {
 public:
   Processor();
-  Processor(const Processor &source);
-  Processor &operator=(const Processor &source);
+  Processor(const Processor &source) = delete;
+  Processor &operator=(const Processor &source) = delete;
   Processor(Processor &&source);
   Processor &operator=(Processor &&source);
   ~Processor();

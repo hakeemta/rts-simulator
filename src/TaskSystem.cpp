@@ -1,5 +1,4 @@
 #include <TaskSystem.hpp>
-#include <algorithm>
 #include <chrono>
 #include <iostream>
 #include <numeric>
@@ -10,16 +9,6 @@
 int Task::_idCount = 0;
 int Processor::_idCount = 0;
 std::mutex AsyncTask::_mutex;
-
-template <class T>
-void copy(std::vector<std::unique_ptr<T>> &dest,
-          const std::vector<std::unique_ptr<T>> &src) {
-  dest.clear();
-  dest.reserve(src.size());
-  std::transform(
-      src.begin(), src.end(), std::back_inserter(dest),
-      [](const auto &entity) { return std::make_unique<T>(*entity); });
-}
 
 template <class T> void refresh(std::vector<std::unique_ptr<T>> &v) {
   /* Purges null (dispatched) entities.
@@ -37,40 +26,6 @@ TaskSystem::TaskSystem(int m) : _m(m) {
   }
   _timer = std::make_shared<Timer>();
 };
-
-TaskSystem::TaskSystem(const TaskSystem &source) {
-  _m = source._m;
-  _util = source._util;
-
-  _t = source._t;
-  _dt = source._dt;
-  _timer = source._timer;
-
-  copy(_readyTasks, source._readyTasks);
-  copy(_dispatchedTasks, source._dispatchedTasks);
-  copy(_completedTasks, source._completedTasks);
-  copy(_processors, source._processors);
-}
-
-TaskSystem &TaskSystem::operator=(const TaskSystem &source) {
-  if (this == &source) {
-    return *this;
-  }
-
-  _m = source._m;
-  _util = source._util;
-
-  _t = source._t;
-  _dt = source._dt;
-  _timer = source._timer;
-
-  copy(_readyTasks, source._readyTasks);
-  copy(_dispatchedTasks, source._dispatchedTasks);
-  copy(_completedTasks, source._completedTasks);
-  copy(_processors, source._processors);
-
-  return *this;
-}
 
 TaskSystem::TaskSystem(TaskSystem &&source) {
   _m = source._m;

@@ -4,30 +4,15 @@
 
 AsyncTask::AsyncTask(Parameters params) : Task(params) {}
 
-AsyncTask::AsyncTask(const AsyncTask &source) : Task(source) {
-  _timer = source._timer;
-}
-
-AsyncTask &AsyncTask::operator=(const AsyncTask &source) {
-  if (this == &source) {
-    return *this;
-  }
-
-  Task::operator=(source);
-  _timer = source._timer;
-  return *this;
-}
-
-AsyncTask::AsyncTask(AsyncTask &&source) : Task(source) {
-  _timer = std::move(source._timer);
-}
+AsyncTask::AsyncTask(AsyncTask &&source)
+    : _timer(std::move(source._timer)), Task(std::move(source)) {}
 
 AsyncTask &AsyncTask::operator=(AsyncTask &&source) {
   if (this == &source) {
     return *this;
   }
 
-  Task{source};
+  Task{std::move(source)};
   _timer = std::move(source._timer);
   return *this;
 }

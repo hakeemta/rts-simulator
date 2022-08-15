@@ -9,36 +9,6 @@ Task::Task(Parameters params)
   reset();
 }
 
-Task::Task(const Task &source) {
-  _id = source._id;
-  _params = source._params;
-  _attrs = source._attrs;
-  _status = source._status;
-  _t = source._t;
-
-  if (source._processor != nullptr) {
-    _processor = std::make_unique<Processor>(*(source._processor));
-  }
-}
-
-Task &Task::operator=(const Task &source) {
-  if (this == &source) {
-    return *this;
-  }
-
-  _id = source._id;
-  _params = source._params;
-  _attrs = source._attrs;
-  _status = source._status;
-  _t = source._t;
-
-  if (source._processor != nullptr) {
-    _processor = std::make_unique<Processor>(*(source._processor));
-  }
-
-  return *this;
-}
-
 Task::Task(Task &&source) {
   _id = source._id;
   _params = source._params;

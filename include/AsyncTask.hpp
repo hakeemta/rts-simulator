@@ -10,8 +10,8 @@
 class AsyncTask : public Task {
 public:
   AsyncTask(Parameters params);
-  AsyncTask(const AsyncTask &source);
-  AsyncTask &operator=(const AsyncTask &source);
+  AsyncTask(const AsyncTask &source) = delete;
+  AsyncTask &operator=(const AsyncTask &source) = delete;
   AsyncTask(AsyncTask &&source);
   AsyncTask &operator=(AsyncTask &&source);
   ~AsyncTask(){};

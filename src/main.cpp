@@ -57,11 +57,11 @@ int main() {
   auto state = system.readyState();
   int m = system.M();
   time_t t = 0;
-  for (int i = 0; i < 40; i++) {
+  for (int i = 0; i < 400; i++) {
     if (i != 0 && i % 100 == 0) {
       // system.reset();
-      TaskSystem systemSnapshot(system);
-      system = systemSnapshot;
+      TaskSystem systemSnapshot(std::move(system));
+      system = std::move(systemSnapshot);
       state = system.readyState();
     }
 

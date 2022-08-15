@@ -2,17 +2,6 @@
 
 Processor::Processor() : Resource(++_idCount) {}
 
-Processor::Processor(const Processor &source) { _id = source._id; }
-
-Processor &Processor::operator=(const Processor &source) {
-  if (this == &source) {
-    return *this;
-  }
-
-  _id = source._id;
-  return *this;
-}
-
 Processor::Processor(Processor &&source) {
   _id = source._id;
   source._id = 0;

@@ -39,8 +39,8 @@ public:
   };
 
   Task(Parameters params);
-  Task(const Task &source);
-  Task &operator=(const Task &source);
+  Task(const Task &source) = delete;
+  Task &operator=(const Task &source) = delete;
   Task(Task &&source);
   Task &operator=(Task &&source);
   ~Task(){};
