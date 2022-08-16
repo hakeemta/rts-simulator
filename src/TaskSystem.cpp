@@ -208,7 +208,7 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
   _t += dt;
   _timer->increment(dt);
   // Wait for any awaken threads
-  std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  std::this_thread::sleep_for(std::chrono::milliseconds(250));
 
   for (auto &task : _dispatchedTasks) {
     if (!task->stepped(_t)) {
