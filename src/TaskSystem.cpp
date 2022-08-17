@@ -25,7 +25,7 @@ TaskSystem::TaskSystem(TaskSystem &&source) {
   _m = source._m;
   _util = source._util;
 
-  _dt = source._dt;
+  _quantumSize = source._quantumSize;
   _timer = std::move(source._timer);
 
   _readyTasks = std::move(source._readyTasks);
@@ -44,7 +44,7 @@ TaskSystem &TaskSystem::operator=(TaskSystem &&source) {
   _m = source._m;
   _util = source._util;
 
-  _dt = source._dt;
+  _quantumSize = source._quantumSize;
   _timer = std::move(source._timer);
 
   _readyTasks = std::move(source._readyTasks);
@@ -59,7 +59,7 @@ TaskSystem &TaskSystem::operator=(TaskSystem &&source) {
 void TaskSystem::invalidate() {
   _m = 1;
   _util = 0;
-  _dt = 0;
+  _quantumSize = 0;
 }
 
 TaskState TaskSystem::getState(const TaskSubSet &tasks) {
@@ -145,11 +145,11 @@ void TaskSystem::addTask(Task::Parameters params) {
 
   Task::Parameters p = task->params();
   std::vector<time_t> v{p.C, p.D, p.T};
-  _dt = std::reduce(v.begin(), v.end(), _dt,
-                    [](const time_t &init, const time_t &first) {
-                      return std::gcd(init, first);
-                    });
-  _L = std::lcm(_L, p.T);
+  _quantumSize = std::reduce(v.begin(), v.end(), _quantumSize,
+                             [](const time_t &init, const time_t &first) {
+                               return std::gcd(init, first);
+                             });
+  _hyperperiod = std::lcm(_hyperperiod, p.T);
 
   _readyTasks.emplace_back(std::move(task));
   _n += 1;
@@ -168,7 +168,7 @@ void TaskSystem::loadTasks(std::string filename) {
 
   char title[64];
   sprintf(title, "Util:%.2f, #Tasks:%d, #Procs:%d, #Steps:%ld", _util, _n, _m,
-          _L);
+          _hyperperiod);
   _display->updateStatus(title);
 }
 
@@ -214,7 +214,7 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
     release resources.
   */
 
-  auto dt = _dt * proportion;
+  auto dt = _quantumSize * proportion;
   dispatchTasks(indices, dt);
   dispatchTasks(_readyTasks, dt);
   dispatchTasks(_completedTasks, dt);

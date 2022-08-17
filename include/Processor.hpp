@@ -14,11 +14,11 @@ public:
   Processor &operator=(Processor &&source);
   ~Processor();
 
-  int capacity{1};
   void keepThread(std::unique_ptr<std::thread> thread);
   void releaseThread();
 
 private:
+  int _capacity{1};
   std::unique_ptr<std::thread> _thread;
   static int _idCount; // Global variable for counting processor object ids
 };

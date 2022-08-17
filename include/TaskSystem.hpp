@@ -27,8 +27,8 @@ public:
   const int N() const { return _n; }
   double util() const { return _util; };
   const time_t T() const { return _timer->get(); }
-  const time_t dt() const { return _dt; };
-  const time_t L() const { return _L; };
+  const time_t dt() const { return _quantumSize; };
+  const time_t L() const { return _hyperperiod; };
 
   void addTask(Task::Parameters params);
   void loadTasks(std::string filename);
@@ -47,8 +47,8 @@ private:
   TaskSubSet _dispatchedTasks;
   TaskSubSet _completedTasks;
 
-  time_t _dt{0};
-  time_t _L{1};
+  time_t _quantumSize{0};
+  time_t _hyperperiod{1};
   std::shared_ptr<Timer> _timer;
   std::shared_ptr<Display> _display;
 
