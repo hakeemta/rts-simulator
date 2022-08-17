@@ -1,6 +1,7 @@
 #ifndef TIMER_HPP
 #define TIMER_HPP
 
+#include <condition_variable>
 #include <mutex>
 
 class Timer {
