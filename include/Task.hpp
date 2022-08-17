@@ -51,9 +51,12 @@ public:
 
   void reset(bool start = true);
   bool ready();
+  void allocateProcessor(ProcessorPtr processor) {
+    _processor = std::move(processor);
+  };
   ProcessorPtr releaseProcessor() { return std::move(_processor); };
   virtual bool stepped(const time_t t) { return _t == t; };
-  virtual void dispatch(ProcessorPtr processor = nullptr, time_t dt = 1);
+  virtual void dispatch(time_t dt = 1);
 
 protected:
   time_t _t{0};

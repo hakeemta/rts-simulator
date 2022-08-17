@@ -22,10 +22,10 @@ public:
   TaskSystem &operator=(TaskSystem &&source);
   ~TaskSystem(){};
 
-  const time_t M() const { return _m; }
-  const time_t N() const { return _n; }
+  const int M() const { return _m; }
+  const int N() const { return _n; }
   double util() const { return _util; };
-  const time_t T() const { return _t; }
+  const time_t T() const { return _timer->get(); }
   const time_t dt() const { return _dt; };
   const time_t L() const { return _L; };
 
@@ -46,7 +46,6 @@ private:
   TaskSubSet _dispatchedTasks;
   TaskSubSet _completedTasks;
 
-  time_t _t{0};
   time_t _dt{0};
   time_t _L{1};
   std::shared_ptr<Timer> _timer;

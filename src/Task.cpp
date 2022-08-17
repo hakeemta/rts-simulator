@@ -1,5 +1,6 @@
 #include <Task.hpp>
 #include <cassert>
+#include <iostream>
 
 Task::Task(Parameters params)
     : Resource(++_idCount), _params(params), _attrs(params) {
@@ -75,14 +76,12 @@ bool Task::ready() {
   return (_status == Status::IDLE) || (_status == Status::RUNNING);
 }
 
-void Task::dispatch(ProcessorPtr processor, time_t dt) {
-  if (processor == nullptr) {
+void Task::dispatch(time_t dt) {
+  if (_processor == nullptr) {
     if (_status == Status::RUNNING) {
       _status = Status::IDLE;
     }
   } else {
-    _processor = std::move(processor);
-
     if (!ready()) {
       throw std::out_of_range("Task execution overrun!");
     }

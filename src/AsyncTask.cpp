@@ -18,25 +18,31 @@ AsyncTask &AsyncTask::operator=(AsyncTask &&source) {
   return *this;
 }
 
-void AsyncTask::step() {
-  std::unique_lock<std::mutex> lck(_mutex);
-  // std::cout << "[t=" << _t << "] Task " << id() << " on proc. "
-  //           << _processor->id() << " [" << std::this_thread::get_id() << "]"
-  //           << std::endl;
-  lck.unlock();
+void AsyncTask::step(time_t dt) {
+  for (time_t t = 0; t < dt; t++) {
+    Task::dispatch();
 
-  _timer->synchronize(_t);
+    std::unique_lock<std::mutex> lck(_mutex);
+    std::cout << "[t=" << _t << "] Task " << id() << " on proc. "
+              << _processor->id() << " [" << std::this_thread::get_id() << "]"
+              << std::endl;
+    lck.unlock();
+
+    _timer->synchronize(_t);
+  }
+
   _doneDispatched = true;
 }
 
-void AsyncTask::dispatch(ProcessorPtr processor, time_t dt) {
-  Task::dispatch(std::move(processor), dt);
+void AsyncTask::dispatch(time_t dt) {
+  if (_processor == nullptr) {
+    Task::dispatch(dt);
+    return;
+  }
 
   _doneDispatched = false;
-  if (_processor != nullptr) {
-    auto thread = std::make_unique<std::thread>(&AsyncTask::step, this);
-    _processor->keepThread(std::move(thread));
-  }
+  auto thread = std::make_unique<std::thread>(&AsyncTask::step, this, dt);
+  _processor->keepThread(std::move(thread));
 }
 
 bool AsyncTask::stepped(const time_t t) {

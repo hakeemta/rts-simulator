@@ -30,10 +30,10 @@ int main(int argc, char **argv) {
     L = system.L();
   }
 
-  char title[64];
-  sprintf(title, "Util:%.2f, #Tasks:%d, #Procs:%d, #Steps:%d, Filename:%s",
-          system.util(), system.N(), m, L, filename.c_str());
-  Display display(m, title);
+  // char title[64];
+  // sprintf(title, "Util:%.2f, #Tasks:%d, #Procs:%d, #Steps:%d, Filename:%s",
+  //         system.util(), system.N(), m, L, filename.c_str());
+  // Display display(m, title);
 
   auto state = system.readyState();
   time_t t = 0;
@@ -63,9 +63,9 @@ int main(int argc, char **argv) {
 
     state = system.operator()(indices);
     auto completed = system.completedState();
-    // std::cout << "[t=" << system.T() << "] Dispatcher on main proc. ["
-    //           << std::this_thread::get_id() << "]" << std::endl
-    //           << std::endl;
+    std::cout << "[t=" << system.T() << "] Dispatcher on main proc. ["
+              << std::this_thread::get_id() << "]" << std::endl
+              << std::endl;
   }
 
   getchar();

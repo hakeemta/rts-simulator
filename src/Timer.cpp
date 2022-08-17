@@ -10,3 +10,8 @@ void Timer::synchronize(const time_t next) {
   std::unique_lock<std::mutex> lock(_mutex);
   _condition.wait(lock, [this, &next] { return _value == next; });
 }
+
+time_t Timer::get() {
+  std::lock_guard<std::mutex> lock(_mutex);
+  return _value;
+}

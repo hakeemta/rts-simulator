@@ -16,14 +16,14 @@ public:
   AsyncTask &operator=(AsyncTask &&source);
   ~AsyncTask(){};
 
-  void dispatch(ProcessorPtr processor = nullptr, time_t dt = 1) override;
+  void dispatch(time_t dt = 1) override;
   bool stepped(const time_t t) override;
 
 private:
   std::shared_ptr<Timer> _timer;
   bool _doneDispatched{false};
 
-  void step();
+  void step(time_t dt);
   static std::mutex _mutex; // Shared by all tasks for protecting cout
 };
 

@@ -24,7 +24,6 @@ TaskSystem::TaskSystem(TaskSystem &&source) {
   _m = source._m;
   _util = source._util;
 
-  _t = source._t;
   _dt = source._dt;
   _timer = std::move(source._timer);
 
@@ -44,7 +43,6 @@ TaskSystem &TaskSystem::operator=(TaskSystem &&source) {
   _m = source._m;
   _util = source._util;
 
-  _t = source._t;
   _dt = source._dt;
   _timer = std::move(source._timer);
 
@@ -60,7 +58,6 @@ TaskSystem &TaskSystem::operator=(TaskSystem &&source) {
 void TaskSystem::invalidate() {
   _m = 1;
   _util = 0;
-  _t = 0;
   _dt = 0;
 }
 
@@ -103,7 +100,8 @@ void TaskSystem::dispatchTasks(const std::vector<int> &indices, time_t dt) {
   for (int k = 0; k < indices.size(); k++) {
     const auto &i = indices[k];
     auto &task = _dispatchedTasks.emplace_back(std::move(_readyTasks[i]));
-    task->dispatch(std::move(_processors[k]), dt);
+    task->allocateProcessor(std::move(_processors[k]));
+    task->dispatch(dt);
   }
 
   refresh(_processors);
@@ -115,7 +113,7 @@ void TaskSystem::dispatchTasks(TaskSubSet &tasks, time_t dt) {
    */
 
   for (auto &task : tasks) {
-    task->dispatch(nullptr, dt);
+    task->dispatch(dt);
     _dispatchedTasks.emplace_back(std::move(task));
   }
   tasks.clear();
@@ -172,7 +170,6 @@ void TaskSystem::reset() {
   /* Acquires any resources from the disptached tasks.
      Returns all tasks to ready and resets them.
   */
-  _t = 0;
   _timer->reset();
 
   for (auto &task : _dispatchedTasks) {
@@ -202,20 +199,21 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
 
   auto dt = _dt * proportion;
   dispatchTasks(indices, dt);
-  dispatchTasks(_readyTasks);
-  dispatchTasks(_completedTasks);
+  dispatchTasks(_readyTasks, dt);
+  dispatchTasks(_completedTasks, dt);
 
-  _t += dt;
-  _timer->increment(dt);
-  // Wait for any awaken threads
-  std::this_thread::sleep_for(std::chrono::milliseconds(250));
+  for (time_t t = 0; t < dt; t++) {
+    _timer->increment();
+    // Wait for any awaken threads
+    std::this_thread::sleep_for(std::chrono::milliseconds(250));
+  }
 
+  auto t = _timer->get();
   for (auto &task : _dispatchedTasks) {
-    if (!task->stepped(_t)) {
+    if (!task->stepped(t)) {
       continue;
     }
 
-    // std::cout << task->id() << " stepped!" << std::endl;
     acquireResources(task);
     if (task->ready()) {
       _readyTasks.emplace_back(std::move(task));
