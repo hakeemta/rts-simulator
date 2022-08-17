@@ -1,7 +1,6 @@
 #include <Display.hpp>
 
-Display::Display(int numProcessors, std::string title)
-    : _numProcessors(numProcessors) {
+Display::Display(int numProcessors) : _numProcessors(numProcessors) {
   initscr();
   cbreak();
   start_color();
@@ -10,9 +9,20 @@ Display::Display(int numProcessors, std::string title)
     init_pair(c, c, COLOR_BLACK);
   }
 
-  mvprintw(1, 1, title.c_str());
+  for (int i = 0; i < _numProcessors; i++) {
+    std::deque<int> q;
+    _traces.emplace_back(q);
+  }
+
   drawTraces();
   drawListings();
+}
+
+Display::~Display() { endwin(); }
+
+void Display::updateStatus(std::string title) {
+  mvprintw(1, 1, title.c_str());
+  refresh();
 }
 
 void Display::drawTraces() {
@@ -57,7 +67,6 @@ WINDOW *Display::drawListing(int height, int width, int starty, int startx,
 void Display::drawListings() {
   int listStarty = 3 * (_numProcessors + 1) + 2;
   const int listHeight = 16, listWidth = 46;
-  init_pair(1, COLOR_BLACK, COLOR_GREEN);
 
   _readyWin = drawListing(listHeight, listWidth, listStarty, 0, "Ready",
                           "  TID\tC(t)\tD(t)\tL(t)\tU\tRels.");
@@ -65,14 +74,45 @@ void Display::drawListings() {
   auto runningHeight = _numProcessors + 3;
   _runningWin = drawListing(runningHeight, listWidth, listStarty, listWidth + 2,
                             "Running", "  TID\tC(t)\tD(t)\tL(t)\tU\tRels.");
-
-  _completedWin = drawListing((listHeight - runningHeight), listWidth,
-                              (listStarty + runningHeight), listWidth + 2,
-                              "Completed", "  TID\tC(t)\tD(t)\tL(t)\tU\tRels.");
 }
 
 void Display::updateTrace(int index, int value) {
-  ; //
+  std::lock_guard<std::mutex> lock(_mutex);
+  auto &trace = _traces[index];
+  trace.push_back(value);
+  if (trace.size() > (_traceWidth - 2)) {
+    trace.pop_front();
+  }
+
+  auto win = _traceWins[index];
+  for (int i = 0; i < trace.size(); i++) {
+    auto color = COLOR_PAIR(trace[i]);
+    wattron(win, color);
+    mvwprintw(win, 1, (i + 1), "|");
+    wattroff(win, color);
+  }
+  wrefresh(win);
 }
 
-Display::~Display() { endwin(); }
+void Display::updateList(ListingType type, int index, int value,
+                         std::string state) {
+  std::lock_guard<std::mutex> lock(_mutex);
+
+  WINDOW *win = _readyWin;
+  if (type == ListingType::RUNNING) {
+    win = _runningWin;
+  }
+
+  auto color = COLOR_PAIR(value);
+  wattron(win, color);
+  mvwprintw(win, index, 1, "|");
+  wattroff(win, color);
+
+  mvwprintw(win, index, 3, state.c_str());
+  wrefresh(win);
+}
+
+void Display::clearLists() {
+  wclear(_readyWin);
+  wclear(_runningWin);
+}

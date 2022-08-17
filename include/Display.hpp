@@ -2,17 +2,20 @@
 #define DISPLAY_HPP
 
 #include <deque>
+#include <mutex>
 #include <ncurses.h>
 #include <string>
 #include <vector>
 
 class Display {
-  enum class ListingType { IDLE, RUNNING, COMPLETED };
-
 public:
-  Display(int numProcessors = 2, std::string title = "");
+  enum class ListingType { IDLE, RUNNING };
+
+  Display(int numProcessors = 2);
+  void updateStatus(std::string title = "");
   void updateTrace(int index, int value);
-  void updateList(ListingType type);
+  void updateList(ListingType type, int index, int value, std::string state);
+  void clearLists();
   ~Display();
 
 private:
@@ -21,8 +24,8 @@ private:
   std::vector<WINDOW *> _traceWins;
   WINDOW *_readyWin;
   WINDOW *_runningWin;
-  WINDOW *_completedWin;
 
+  std::mutex _mutex;
   std::vector<std::deque<int>> _traces;
 
   WINDOW *drawListing(int height, int width, int starty, int startx,

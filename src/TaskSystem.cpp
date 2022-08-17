@@ -18,6 +18,7 @@ TaskSystem::TaskSystem(int m) : _m(m) {
     _processors.emplace_back(std::make_unique<Processor>());
   }
   _timer = std::make_shared<Timer>();
+  _display = std::make_shared<Display>(_m);
 };
 
 TaskSystem::TaskSystem(TaskSystem &&source) {
@@ -135,7 +136,7 @@ void TaskSystem::addTask(Task::Parameters params) {
      and adds the task to ready.
    */
 
-  auto task = std::make_unique<AsyncTask>(params, _timer);
+  auto task = std::make_unique<AsyncTask>(params, _timer, _display);
   if (task->util() == 0) {
     return;
   }
@@ -164,6 +165,11 @@ void TaskSystem::loadTasks(std::string filename) {
     auto [C, T] = task;
     addTask(Task::Parameters{C, T});
   }
+
+  char title[64];
+  sprintf(title, "Util:%.2f, #Tasks:%d, #Procs:%d, #Steps:%ld", _util, _n, _m,
+          _L);
+  _display->updateStatus(title);
 }
 
 void TaskSystem::reset() {
@@ -189,6 +195,17 @@ void TaskSystem::reset() {
   refresh(_completedTasks);
 }
 
+void TaskSystem::displayListings() {
+  int readyCount = 0;
+  int completedCount = 0;
+  for (auto &task : _dispatchedTasks) {
+    if (task->status() == Task::Status::IDLE) {
+      _display->updateList(Display::ListingType::IDLE, readyCount++, task->id(),
+                           (*task)());
+    }
+  }
+}
+
 TaskState TaskSystem::operator()(const std::vector<int> &indices,
                                  time_t proportion) {
   /* Dispatches tasks to run selected ready and
@@ -203,9 +220,11 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
   dispatchTasks(_completedTasks, dt);
 
   for (time_t t = 0; t < dt; t++) {
+    displayListings();
     _timer->increment();
     // Wait for any awaken threads
-    std::this_thread::sleep_for(std::chrono::milliseconds(250));
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    _display->clearLists();
   }
 
   auto t = _timer->get();

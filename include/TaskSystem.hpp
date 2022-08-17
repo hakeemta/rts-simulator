@@ -2,6 +2,7 @@
 #define TASK_SYSTEM_HPP
 
 #include <AsyncTask.hpp>
+#include <Display.hpp>
 #include <Processor.hpp>
 #include <Timer.hpp>
 #include <memory>
@@ -49,12 +50,14 @@ private:
   time_t _dt{0};
   time_t _L{1};
   std::shared_ptr<Timer> _timer;
+  std::shared_ptr<Display> _display;
 
   void invalidate();
   TaskState getState(const TaskSubSet &tasks);
   void dispatchTasks(const std::vector<int> &indices, time_t dt = 1);
   void dispatchTasks(TaskSubSet &tasks, time_t dt = 1);
   void acquireResources(TaskPtr &task);
+  void displayListings();
 };
 
 #endif

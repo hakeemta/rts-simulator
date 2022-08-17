@@ -105,3 +105,10 @@ void Task::dispatch(time_t dt) {
     reset(false);
   }
 }
+
+std::string Task::operator()() const {
+  char str[64];
+  sprintf(str, "%d\t%ld\t%ld\t%ld\t%.2f\t%ld", _id, _attrs.Ct, _attrs.Dt,
+          _attrs.Lt, _params.U, _attrs.releases);
+  return std::string(str);
+}

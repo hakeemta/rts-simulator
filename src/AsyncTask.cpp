@@ -2,8 +2,9 @@
 #include <iostream>
 #include <thread>
 
-AsyncTask::AsyncTask(Parameters params, std::shared_ptr<Timer> timer)
-    : _timer{timer}, Task(params) {}
+AsyncTask::AsyncTask(Parameters params, std::shared_ptr<Timer> timer,
+                     std::shared_ptr<Display> display)
+    : _timer{timer}, _display(display), Task(params) {}
 
 AsyncTask::AsyncTask(AsyncTask &&source)
     : _timer(std::move(source._timer)), Task(std::move(source)) {}
@@ -22,11 +23,19 @@ void AsyncTask::step(time_t dt) {
   for (time_t t = 0; t < dt; t++) {
     Task::dispatch();
 
-    std::unique_lock<std::mutex> lck(_mutex);
-    std::cout << "[t=" << _t << "] Task " << id() << " on proc. "
-              << _processor->id() << " [" << std::this_thread::get_id() << "]"
-              << std::endl;
-    lck.unlock();
+    _display->updateTrace(_processor->id() - 1, id());
+
+    if (status() == Status::RUNNING) {
+      _display->updateList(Display::ListingType::RUNNING, _processor->id() - 1,
+                           id(), (*this)());
+    }
+
+    // std::unique_lock<std::mutex> lck(_mutex);
+    // std::cout << "[t=" << _t << "] Task " << id() << " on proc. "
+    //           << _processor->id() << " [" << std::this_thread::get_id() <<
+    //           "]"
+    //           << std::endl;
+    // lck.unlock();
 
     _timer->synchronize(_t);
   }
@@ -36,8 +45,7 @@ void AsyncTask::step(time_t dt) {
 
 void AsyncTask::dispatch(time_t dt) {
   if (_processor == nullptr) {
-    Task::dispatch(dt);
-    return;
+    return Task::dispatch(dt);
   }
 
   _doneDispatched = false;

@@ -1,6 +1,7 @@
 #ifndef ASYNCTASK_HPP
 #define ASYNCTASK_HPP
 
+#include <Display.hpp>
 #include <Task.hpp>
 #include <Timer.hpp>
 #include <ctime>
@@ -9,7 +10,8 @@
 
 class AsyncTask : public Task {
 public:
-  AsyncTask(Parameters params, std::shared_ptr<Timer> timer);
+  AsyncTask(Parameters params, std::shared_ptr<Timer> timer,
+            std::shared_ptr<Display> display);
   AsyncTask(const AsyncTask &source) = delete;
   AsyncTask &operator=(const AsyncTask &source) = delete;
   AsyncTask(AsyncTask &&source);
@@ -20,8 +22,9 @@ public:
   bool stepped(const time_t t) override;
 
 private:
-  std::shared_ptr<Timer> _timer;
   bool _doneDispatched{false};
+  std::shared_ptr<Timer> _timer;
+  std::shared_ptr<Display> _display;
 
   void step(time_t dt);
   static std::mutex _mutex; // Shared by all tasks for protecting cout
