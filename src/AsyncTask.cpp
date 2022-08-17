@@ -24,7 +24,6 @@ void AsyncTask::step(time_t dt) {
     Task::dispatch();
 
     _display->updateTrace(_processor->id() - 1, id());
-
     if (status() == Status::RUNNING) {
       _display->updateList(Display::ListingType::RUNNING, _processor->id() - 1,
                            id(), (*this)());

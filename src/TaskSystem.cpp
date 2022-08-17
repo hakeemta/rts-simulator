@@ -220,11 +220,11 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
   dispatchTasks(_completedTasks, dt);
 
   for (time_t t = 0; t < dt; t++) {
+    _display->clearLists();
     displayListings();
     _timer->increment();
     // Wait for any awaken threads
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    _display->clearLists();
   }
 
   auto t = _timer->get();

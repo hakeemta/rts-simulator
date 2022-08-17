@@ -25,23 +25,32 @@ void Display::updateStatus(std::string title) {
   refresh();
 }
 
+void Display::drawTime() {
+  wclear(_timeWin);
+  for (int t = 0; t < _traceWidth + 1; t += 10) {
+    auto offset = (_timeOffset % 10);
+    mvwprintw(_timeWin, 0, (t - offset), "%d", (t + _timeOffset - offset));
+  }
+  wrefresh(_timeWin);
+}
+
 void Display::drawTraces() {
   mvprintw(2, 1, "Proc.");
   for (int i = 0; i < _numProcessors; i++) {
     int starty = 3 * (i + 1) + 1;
     mvprintw(starty, 3, "%d", i + 1);
 
-    WINDOW *win = newwin(3, _traceWidth, starty - 1, 5);
+    WINDOW *win = newwin(3, _traceWidth, starty - 1, 6);
     box(win, 0, 0);
     _traceWins.emplace_back(win);
   }
 
   int timeStarty = 3 * (_numProcessors + 1);
   mvprintw(timeStarty, 1, "Time");
-  for (int t = 0; t < _traceWidth; t += 10) {
-    mvprintw(timeStarty, t + 6, "%d", t);
-  }
   refresh();
+
+  _timeWin = newwin(1, _traceWidth + 4, timeStarty, 6);
+  drawTime();
 
   for (auto win : _traceWins) {
     wrefresh(win);
@@ -82,6 +91,8 @@ void Display::updateTrace(int index, int value) {
   trace.push_back(value);
   if (trace.size() > (_traceWidth - 2)) {
     trace.pop_front();
+    _timeOffset += 1;
+    drawTime();
   }
 
   auto win = _traceWins[index];

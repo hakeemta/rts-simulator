@@ -20,16 +20,19 @@ public:
 
 private:
   int _numProcessors{2};
-  const int _traceWidth = 102;
+  const int _traceWidth = 100;
   std::vector<WINDOW *> _traceWins;
+  WINDOW *_timeWin;
   WINDOW *_readyWin;
   WINDOW *_runningWin;
 
   std::mutex _mutex;
+  time_t _timeOffset{0};
   std::vector<std::deque<int>> _traces;
 
   WINDOW *drawListing(int height, int width, int starty, int startx,
                       std::string title, std::string heading);
+  void drawTime();
   void drawTraces();
   void drawListings();
 };
