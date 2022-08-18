@@ -1,5 +1,6 @@
 #include <TaskSystem.hpp>
 #include <algorithms/PFair.hpp>
+#include <cassert>
 #include <chrono>
 #include <cmath>
 #include <functional>

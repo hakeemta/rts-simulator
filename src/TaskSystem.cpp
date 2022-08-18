@@ -1,4 +1,5 @@
 #include <TaskSystem.hpp>
+#include <cassert>
 #include <chrono>
 #include <iostream>
 #include <numeric>
@@ -141,7 +142,7 @@ void TaskSystem::addTask(Task::Parameters params) {
     return;
   }
   _util += task->util();
-  // assert(_util <= _m);
+  assert(_util <= _m);
 
   Task::Parameters p = task->params();
   std::vector<time_t> v{p.C, p.D, p.T};
