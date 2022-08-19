@@ -42,7 +42,7 @@ private:
   int _n{0};
   double _util{0.0};
 
-  std::vector<ProcessorPtr> _processors;
+  std::vector<AsyncProcessorPtr> _processors;
   TaskSubSet _readyTasks;
   TaskSubSet _dispatchedTasks;
   TaskSubSet _completedTasks;

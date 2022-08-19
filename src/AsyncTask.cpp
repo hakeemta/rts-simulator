@@ -43,7 +43,7 @@ void AsyncTask::step(time_t dt) {
 }
 
 void AsyncTask::dispatch(time_t dt) {
-  if (_processor == nullptr) {
+  if (!hasProcessor()) {
     return Task::dispatch(dt);
   }
 

@@ -77,7 +77,7 @@ bool Task::ready() {
 }
 
 void Task::dispatch(time_t dt) {
-  if (_processor == nullptr) {
+  if (!hasProcessor()) {
     if (_status == Status::RUNNING) {
       _status = Status::IDLE;
     }

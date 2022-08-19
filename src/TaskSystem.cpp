@@ -16,7 +16,7 @@ TaskSystem::TaskSystem(int m) : _m(m) {
   /* Initializes the task system with the set number of processors.
    */
   for (int i = 0; i < m; i++) {
-    _processors.emplace_back(std::make_unique<Processor>());
+    _processors.emplace_back(std::make_unique<AsyncProcessor>());
   }
   _timer = std::make_shared<Timer>();
   _display = std::make_shared<Display>(_m);
