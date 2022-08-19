@@ -200,7 +200,7 @@ void TaskSystem::displayListings() {
   int readyCount = 0;
   int completedCount = 0;
   for (auto &task : _dispatchedTasks) {
-    if (task->status() == Task::Status::IDLE) {
+    if (task->status() == Task::Status::IDLE && !task->hasProcessor()) {
       _display->updateList(Display::ListingType::IDLE, readyCount++, task->id(),
                            (*task)());
     }
@@ -214,6 +214,7 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
     Steps tasks to check for completed tasks and
     release resources.
   */
+  _display->clearLists();
 
   auto dt = _quantumSize * proportion;
   dispatchTasks(indices, dt);
@@ -221,7 +222,6 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
   dispatchTasks(_completedTasks, dt);
 
   for (time_t t = 0; t < dt; t++) {
-    _display->clearLists();
     displayListings();
     _timer->increment();
     // Wait for any awaken threads

@@ -24,17 +24,8 @@ void AsyncTask::step(time_t dt) {
     Task::dispatch();
 
     _display->updateTrace(_processor->id() - 1, id());
-    if (status() == Status::RUNNING) {
-      _display->updateList(Display::ListingType::RUNNING, _processor->id() - 1,
-                           id(), (*this)());
-    }
-
-    // std::unique_lock<std::mutex> lck(_mutex);
-    // std::cout << "[t=" << _t << "] Task " << id() << " on proc. "
-    //           << _processor->id() << " [" << std::this_thread::get_id() <<
-    //           "]"
-    //           << std::endl;
-    // lck.unlock();
+    _display->updateList(Display::ListingType::RUNNING, _processor->id() - 1,
+                         id(), (*this)());
 
     _timer->synchronize(_t);
   }

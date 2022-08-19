@@ -125,5 +125,8 @@ void Display::updateList(ListingType type, int index, int value,
 
 void Display::clearLists() {
   wclear(_readyWin);
+  wrefresh(_readyWin);
+
   wclear(_runningWin);
+  wrefresh(_runningWin);
 }
