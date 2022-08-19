@@ -4,13 +4,11 @@
 #include <iostream>
 #include <numeric>
 #include <set>
-#include <thread>
 #include <utils.hpp>
 
 // Init static variables
 int Task::_idCount = 0;
 int Processor::_idCount = 0;
-std::mutex AsyncTask::_mutex;
 
 TaskSystem::TaskSystem(int m) : _m(m) {
   /* Initializes the task system with the set number of processors.
@@ -18,16 +16,20 @@ TaskSystem::TaskSystem(int m) : _m(m) {
   for (int i = 0; i < m; i++) {
     _processors.emplace_back(std::make_unique<Processor>());
   }
-  _timer = std::make_shared<Timer>();
+
   _display = std::make_shared<Display>(_m);
 };
 
 TaskSystem::TaskSystem(TaskSystem &&source) {
   _m = source._m;
+  _n = source._n;
   _util = source._util;
 
+  _t = source._t;
   _quantumSize = source._quantumSize;
-  _timer = std::move(source._timer);
+  _hyperperiod = source._hyperperiod;
+
+  _display = std::move(source._display);
 
   _readyTasks = std::move(source._readyTasks);
   _dispatchedTasks = std::move(source._dispatchedTasks);
@@ -43,10 +45,14 @@ TaskSystem &TaskSystem::operator=(TaskSystem &&source) {
   }
 
   _m = source._m;
+  _n = source._n;
   _util = source._util;
 
+  _t = source._t;
   _quantumSize = source._quantumSize;
-  _timer = std::move(source._timer);
+  _hyperperiod = source._hyperperiod;
+
+  _display = std::move(source._display);
 
   _readyTasks = std::move(source._readyTasks);
   _dispatchedTasks = std::move(source._dispatchedTasks);
@@ -101,9 +107,15 @@ void TaskSystem::dispatchTasks(const std::vector<int> &indices, time_t dt) {
 
   for (int k = 0; k < indices.size(); k++) {
     const auto &i = indices[k];
+    auto &processor = _processors[k];
+    auto procIdx = processor->id() - 1;
     auto &task = _dispatchedTasks.emplace_back(std::move(_readyTasks[i]));
-    task->allocateProcessor(std::move(_processors[k]));
+    task->allocateProcessor(std::move(processor));
     task->dispatch(dt);
+
+    _display->updateTrace(procIdx, task->id());
+    _display->updateList(Display::ListingType::RUNNING, procIdx, task->id(),
+                         (*task)());
   }
 
   refresh(_processors);
@@ -114,19 +126,23 @@ void TaskSystem::dispatchTasks(TaskSubSet &tasks, time_t dt) {
   /* Idles tasks without processors.
    */
 
+  int readyCount = 0;
   for (auto &task : tasks) {
     task->dispatch(dt);
-    _dispatchedTasks.emplace_back(std::move(task));
+    auto &_task = _dispatchedTasks.emplace_back(std::move(task));
+    if (_task->status() == Task::Status::IDLE) {
+      _display->updateList(Display::ListingType::IDLE, readyCount++,
+                           _task->id(), (*_task)());
+    }
   }
   tasks.clear();
 }
 
 void TaskSystem::acquireResources(TaskPtr &task) {
-  /* Releases processors and threads from tasks to the pool.
+  /* Releases processors from tasks to the pool.
    */
   auto processor = task->releaseProcessor();
   if (processor != nullptr) {
-    processor->releaseThread();
     _processors.emplace_back(std::move(processor));
   }
 }
@@ -137,7 +153,7 @@ void TaskSystem::addTask(Task::Parameters params) {
      and adds the task to ready.
    */
 
-  auto task = std::make_unique<AsyncTask>(params, _timer, _display);
+  auto task = std::make_unique<Task>(params);
   if (task->util() == 0) {
     return;
   }
@@ -177,7 +193,7 @@ void TaskSystem::reset() {
   /* Acquires any resources from the disptached tasks.
      Returns all tasks to ready and resets them.
   */
-  _timer->reset();
+  _t = 0;
 
   for (auto &task : _dispatchedTasks) {
     acquireResources(task);
@@ -196,17 +212,6 @@ void TaskSystem::reset() {
   refresh(_completedTasks);
 }
 
-void TaskSystem::displayListings() {
-  int readyCount = 0;
-  int completedCount = 0;
-  for (auto &task : _dispatchedTasks) {
-    if (task->status() == Task::Status::IDLE) {
-      _display->updateList(Display::ListingType::IDLE, readyCount++, task->id(),
-                           (*task)());
-    }
-  }
-}
-
 TaskState TaskSystem::operator()(const std::vector<int> &indices,
                                  time_t proportion) {
   /* Dispatches tasks to run selected ready and
@@ -214,23 +219,16 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
     Steps tasks to check for completed tasks and
     release resources.
   */
+  _display->clearLists();
 
   auto dt = _quantumSize * proportion;
   dispatchTasks(indices, dt);
   dispatchTasks(_readyTasks, dt);
   dispatchTasks(_completedTasks, dt);
 
-  for (time_t t = 0; t < dt; t++) {
-    _display->clearLists();
-    displayListings();
-    _timer->increment();
-    // Wait for any awaken threads
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-  }
-
-  auto t = _timer->get();
+  _t += dt;
   for (auto &task : _dispatchedTasks) {
-    if (!task->stepped(t)) {
+    if (!task->stepped(_t)) {
       continue;
     }
 

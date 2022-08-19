@@ -7,7 +7,6 @@
 #include <memory>
 #include <ncurses.h>
 #include <sstream>
-#include <thread>
 #include <vector>
 
 using namespace std::chrono_literals;
@@ -46,9 +45,6 @@ int main(int argc, char **argv) {
 
     state = system.operator()(indices);
     auto completed = system.completedState();
-    // std::cout << "[t=" << system.T() << "] Dispatcher on main proc. ["
-    //           << std::this_thread::get_id() << "]" << std::endl
-    //           << std::endl;
   }
 
   getchar();

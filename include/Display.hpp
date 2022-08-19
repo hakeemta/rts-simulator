@@ -2,7 +2,6 @@
 #define DISPLAY_HPP
 
 #include <deque>
-#include <mutex>
 #include <ncurses.h>
 #include <string>
 #include <vector>
@@ -26,7 +25,6 @@ private:
   WINDOW *_readyWin;
   WINDOW *_runningWin;
 
-  std::mutex _mutex;
   time_t _timeOffset{0};
   std::vector<std::deque<int>> _traces;
 

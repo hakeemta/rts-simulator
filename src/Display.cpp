@@ -86,7 +86,6 @@ void Display::drawListings() {
 }
 
 void Display::updateTrace(int index, int value) {
-  std::lock_guard<std::mutex> lock(_mutex);
   auto &trace = _traces[index];
   trace.push_back(value);
   if (trace.size() > (_traceWidth - 2)) {
@@ -107,8 +106,6 @@ void Display::updateTrace(int index, int value) {
 
 void Display::updateList(ListingType type, int index, int value,
                          std::string state) {
-  std::lock_guard<std::mutex> lock(_mutex);
-
   WINDOW *win = _readyWin;
   if (type == ListingType::RUNNING) {
     win = _runningWin;
@@ -125,5 +122,8 @@ void Display::updateList(ListingType type, int index, int value,
 
 void Display::clearLists() {
   wclear(_readyWin);
+  wrefresh(_readyWin);
+
   wclear(_runningWin);
+  wrefresh(_runningWin);
 }

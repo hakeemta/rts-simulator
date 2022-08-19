@@ -1,17 +1,16 @@
 #ifndef TASK_SYSTEM_HPP
 #define TASK_SYSTEM_HPP
 
-#include <AsyncTask.hpp>
 #include <Display.hpp>
 #include <Processor.hpp>
-#include <Timer.hpp>
+#include <Task.hpp>
 #include <memory>
 #include <tuple>
 #include <vector>
 
 using TaskState =
-    std::vector<std::tuple<int, AsyncTask::Parameters, AsyncTask::Attributes>>;
-using TaskPtr = std::unique_ptr<AsyncTask>;
+    std::vector<std::tuple<int, Task::Parameters, Task::Attributes>>;
+using TaskPtr = std::unique_ptr<Task>;
 using TaskSubSet = std::vector<TaskPtr>;
 
 class TaskSystem {
@@ -26,7 +25,7 @@ public:
   const int M() const { return _m; }
   const int N() const { return _n; }
   double util() const { return _util; };
-  const time_t T() const { return _timer->get(); }
+  const time_t T() const { return _t; }
   const time_t dt() const { return _quantumSize; };
   const time_t L() const { return _hyperperiod; };
 
@@ -47,9 +46,9 @@ private:
   TaskSubSet _dispatchedTasks;
   TaskSubSet _completedTasks;
 
+  time_t _t{0};
   time_t _quantumSize{0};
   time_t _hyperperiod{1};
-  std::shared_ptr<Timer> _timer;
   std::shared_ptr<Display> _display;
 
   void invalidate();
@@ -57,7 +56,6 @@ private:
   void dispatchTasks(const std::vector<int> &indices, time_t dt = 1);
   void dispatchTasks(TaskSubSet &tasks, time_t dt = 1);
   void acquireResources(TaskPtr &task);
-  void displayListings();
 };
 
 #endif
