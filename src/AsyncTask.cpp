@@ -23,9 +23,9 @@ void AsyncTask::step(time_t dt) {
   for (time_t t = 0; t < dt; t++) {
     Task::dispatch();
 
-    _display->updateTrace(_processor->id() - 1, id());
-    _display->updateList(Display::ListingType::RUNNING, _processor->id() - 1,
-                         id(), (*this)());
+    _display->updateTrace(_asyncProcessor->id() - 1, id());
+    _display->updateList(Display::ListingType::RUNNING,
+                         _asyncProcessor->id() - 1, id(), (*this)());
 
     _timer->synchronize(_t);
   }
@@ -40,11 +40,11 @@ void AsyncTask::dispatch(time_t dt) {
 
   _doneDispatched = false;
   auto thread = std::make_unique<std::thread>(&AsyncTask::step, this, dt);
-  _processor->keepThread(std::move(thread));
+  _asyncProcessor->keepThread(std::move(thread));
 }
 
 bool AsyncTask::stepped(const time_t t) {
-  if (_processor == nullptr) {
+  if (!hasProcessor()) {
     return Task::stepped(t);
   }
   return _doneDispatched;

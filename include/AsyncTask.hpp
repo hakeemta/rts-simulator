@@ -22,16 +22,16 @@ public:
   ~AsyncTask(){};
 
   void allocateProcessor(AsyncProcessorPtr processor) {
-    _processor = std::move(processor);
+    _asyncProcessor = std::move(processor);
   };
-  AsyncProcessorPtr releaseProcessor() { return std::move(_processor); };
+  AsyncProcessorPtr releaseProcessor() { return std::move(_asyncProcessor); };
 
-  bool hasProcessor() override { return _processor != nullptr; }
+  bool hasProcessor() override { return _asyncProcessor != nullptr; }
   void dispatch(time_t dt = 1) override;
   bool stepped(const time_t t) override;
 
 private:
-  AsyncProcessorPtr _processor;
+  AsyncProcessorPtr _asyncProcessor;
   bool _doneDispatched{false};
   std::shared_ptr<Timer> _timer;
   std::shared_ptr<Display> _display;
