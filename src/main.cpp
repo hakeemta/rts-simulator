@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
     strStream >> filename >> m >> L;
   }
 
-  TaskSystem system = TaskSystem(m);
+  TaskSystem system = TaskSystem(m, true);
   system.loadTasks(filename);
   if (L == 0) {
     L = system.L();

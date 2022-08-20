@@ -10,14 +10,16 @@
 int Task::_idCount = 0;
 int Processor::_idCount = 0;
 
-TaskSystem::TaskSystem(int m) : _m(m) {
+TaskSystem::TaskSystem(int m, bool log) : _m(m) {
   /* Initializes the task system with the set number of processors.
    */
   for (int i = 0; i < m; i++) {
     _processors.emplace_back(std::make_unique<Processor>());
   }
 
-  _display = std::make_shared<Display>(_m);
+  if (log) {
+    _display = std::make_shared<Display>(_m);
+  }
 };
 
 TaskSystem::TaskSystem(TaskSystem &&source) {
@@ -67,6 +69,7 @@ void TaskSystem::invalidate() {
   _m = 1;
   _util = 0;
   _quantumSize = 0;
+  _hyperperiod = 1;
 }
 
 TaskState TaskSystem::getState(const TaskSubSet &tasks) {
@@ -113,9 +116,11 @@ void TaskSystem::dispatchTasks(const std::vector<int> &indices, time_t dt) {
     task->allocateProcessor(std::move(processor));
     task->dispatch(dt);
 
-    _display->updateTrace(procIdx, task->id());
-    _display->updateList(Display::ListingType::RUNNING, procIdx, task->id(),
-                         (*task)());
+    if (_display != nullptr) {
+      _display->updateTrace(procIdx, task->id());
+      _display->updateList(Display::ListingType::RUNNING, procIdx, task->id(),
+                           (*task)());
+    }
   }
 
   refresh(_processors);
@@ -130,6 +135,10 @@ void TaskSystem::dispatchTasks(TaskSubSet &tasks, time_t dt) {
   for (auto &task : tasks) {
     task->dispatch(dt);
     auto &_task = _dispatchedTasks.emplace_back(std::move(task));
+
+    if (_display == nullptr) {
+      continue;
+    }
     if (_task->status() == Task::Status::IDLE) {
       _display->updateList(Display::ListingType::IDLE, readyCount++,
                            _task->id(), (*_task)());
@@ -218,7 +227,9 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
     Steps tasks to check for completed tasks and
     release resources.
   */
-  _display->clearLists();
+  if (_display != nullptr) {
+    _display->clearLists();
+  }
 
   auto dt = _quantumSize * proportion;
   dispatchTasks(indices, dt);

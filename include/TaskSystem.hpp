@@ -15,7 +15,7 @@ using TaskSubSet = std::vector<TaskPtr>;
 
 class TaskSystem {
 public:
-  TaskSystem(int m = 1);
+  TaskSystem(int m = 1, bool log = false);
   TaskSystem(const TaskSystem &source) = delete;
   TaskSystem &operator=(const TaskSystem &source) = delete;
   TaskSystem(TaskSystem &&source);
