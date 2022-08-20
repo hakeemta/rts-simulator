@@ -59,6 +59,7 @@ public:
   ProcessorPtr releaseProcessor() { return std::move(_processor); };
   virtual bool stepped(const time_t t) { return _t == t; };
   virtual void dispatch(time_t dt = 1);
+  virtual bool hasProcessor() { return _processor != nullptr; };
 
 protected:
   time_t _t{0};
