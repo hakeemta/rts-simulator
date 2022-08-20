@@ -57,6 +57,7 @@ public:
     _processor = std::move(processor);
   };
   ProcessorPtr releaseProcessor() { return std::move(_processor); };
+  virtual bool hasProcessor() { return _processor != nullptr; }
   virtual void dispatch(time_t dt = 1);
   virtual bool stepped(const time_t t) { return _t == t; };
 
@@ -71,7 +72,6 @@ private:
 
   void invalidate();
   void update(bool reload = true);
-  virtual bool hasProcessor() { return _processor != nullptr; }
 
   static int _idCount; // Global variable for counting task object ids
 };

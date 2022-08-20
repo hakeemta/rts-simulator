@@ -17,7 +17,7 @@ Task::Task(Task &&source) {
   _status = source._status;
   _t = source._t;
 
-  if (source._processor != nullptr) {
+  if (source.hasProcessor()) {
     _processor = std::move(source._processor);
   }
 
@@ -35,7 +35,7 @@ Task &Task::operator=(Task &&source) {
   _status = source._status;
   _t = source._t;
 
-  if (source._processor != nullptr) {
+  if (source.hasProcessor()) {
     _processor = std::move(source._processor);
   }
 

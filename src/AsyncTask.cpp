@@ -6,16 +6,34 @@ AsyncTask::AsyncTask(Parameters params, std::shared_ptr<Timer> timer,
                      std::shared_ptr<Display> display)
     : _timer{timer}, _display(display), Task(params) {}
 
-AsyncTask::AsyncTask(AsyncTask &&source)
-    : _timer(std::move(source._timer)), Task(std::move(source)) {}
+AsyncTask::AsyncTask(AsyncTask &&source) : Task(std::move(source)) {
+  _doneDispatched = source._doneDispatched;
+  source._doneDispatched = false;
+
+  if (source.hasProcessor()) {
+    _asyncProcessor = std::move(source._asyncProcessor);
+  }
+
+  _timer = std::move(source._timer);
+  _display = std::move(source._display);
+}
 
 AsyncTask &AsyncTask::operator=(AsyncTask &&source) {
   if (this == &source) {
     return *this;
   }
 
+  _doneDispatched = source._doneDispatched;
+  source._doneDispatched = false;
+
   Task{std::move(source)};
+  if (source.hasProcessor()) {
+    _asyncProcessor = std::move(source._asyncProcessor);
+  }
+
   _timer = std::move(source._timer);
+  _display = std::move(source._display);
+
   return *this;
 }
 

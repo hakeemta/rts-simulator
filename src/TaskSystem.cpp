@@ -124,10 +124,10 @@ void TaskSystem::dispatchTasks(TaskSubSet &tasks, time_t dt) {
 void TaskSystem::acquireResources(TaskPtr &task) {
   /* Releases processors and threads from tasks to the pool.
    */
-  auto processor = task->releaseProcessor();
-  if (processor != nullptr) {
+  if (task->hasProcessor()) {
+    auto processor = task->releaseProcessor();
     processor->releaseThread();
-    _processors.emplace_back(std::move(processor));
+    _processors.emplace_back(move(processor));
   }
 }
 
