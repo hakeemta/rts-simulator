@@ -24,7 +24,10 @@ public:
   void allocateProcessor(AsyncProcessorPtr processor) {
     _asyncProcessor = std::move(processor);
   };
-  AsyncProcessorPtr releaseProcessor() { return std::move(_asyncProcessor); };
+  AsyncProcessorPtr releaseProcessor() {
+    _asyncProcessor->releaseThread();
+    return std::move(_asyncProcessor);
+  }
   bool hasProcessor() override { return _asyncProcessor != nullptr; }
   void dispatch(time_t dt = 1) override;
   bool stepped(const time_t t) override;
