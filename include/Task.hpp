@@ -49,7 +49,7 @@ public:
   const Parameters &params() const { return _params; };
   const Attributes &attrs() const { return _attrs; };
   const Status status() const { return _status; };
-  std::string operator()() const;
+  std::string toString() const;
 
   void reset(bool start = true);
   bool ready();

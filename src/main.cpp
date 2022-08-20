@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
   TaskSystem system = TaskSystem(m, true);
   system.loadTasks(filename);
   if (L == 0) {
-    L = system.L();
+    L = system.H();
   }
 
   auto state = system.readyState();

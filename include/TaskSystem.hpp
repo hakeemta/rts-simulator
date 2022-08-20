@@ -27,7 +27,7 @@ public:
   double util() const { return _util; };
   const time_t T() const { return _t; }
   const time_t dt() const { return _quantumSize; };
-  const time_t L() const { return _hyperperiod; };
+  const time_t H() const { return _hyperperiod; };
 
   void addTask(Task::Parameters params);
   void loadTasks(std::string filename);
@@ -35,6 +35,7 @@ public:
   TaskState readyState() { return getState(_readyTasks); };
   TaskState completedState() { return getState(_completedTasks); };
   TaskState operator()(const std::vector<int> &indices, time_t proportion = 1);
+  std::string toString() const;
 
 private:
   int _m{1};

@@ -119,7 +119,7 @@ void TaskSystem::dispatchTasks(const std::vector<int> &indices, time_t dt) {
     if (_display != nullptr) {
       _display->updateTrace(procIdx, task->id());
       _display->updateList(Display::ListingType::RUNNING, procIdx, task->id(),
-                           (*task)());
+                           task->toString());
     }
   }
 
@@ -141,7 +141,7 @@ void TaskSystem::dispatchTasks(TaskSubSet &tasks, time_t dt) {
     }
     if (_task->status() == Task::Status::IDLE) {
       _display->updateList(Display::ListingType::IDLE, readyCount++,
-                           _task->id(), (*_task)());
+                           _task->id(), task->toString());
     }
   }
   tasks.clear();
@@ -191,10 +191,7 @@ void TaskSystem::loadTasks(std::string filename) {
     addTask(Task::Parameters{C, T});
   }
 
-  char title[64];
-  sprintf(title, "Util:%.2f, #Tasks:%d, #Procs:%d, #Steps:%ld", _util, _n, _m,
-          _hyperperiod);
-  _display->updateStatus(title);
+  _display->updateStatus(toString());
 }
 
 void TaskSystem::reset() {
@@ -252,4 +249,11 @@ TaskState TaskSystem::operator()(const std::vector<int> &indices,
   refresh(_dispatchedTasks);
 
   return readyState();
+}
+
+std::string TaskSystem::toString() const {
+  char str[64];
+  sprintf(str, "U=%.2f, n=%d, m=%d, H=%ld, dt=%ld", _util, _n, _m, _hyperperiod,
+          _quantumSize);
+  return std::string(str);
 }
