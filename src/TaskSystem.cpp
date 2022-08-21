@@ -20,6 +20,9 @@ TaskSystem::TaskSystem(int m, bool log) : _m(m) {
   if (log) {
     _display = std::make_shared<Display>(_m);
   }
+
+  Task::resetIdCount();
+  Processor::resetIdCount();
 };
 
 TaskSystem::TaskSystem(TaskSystem &&source) {
@@ -216,6 +219,19 @@ void TaskSystem::reset() {
   refresh(_dispatchedTasks);
   refresh(_completedTasks);
 }
+
+time_t TaskSystem::nextEventAt() const {
+  time_t nearest;
+  for (auto &task : _readyTasks) {
+    nearest = std::min({nearest, task->attrs().Ct, task->attrs().Dt});
+  }
+
+  for (auto &task : _completedTasks) {
+    nearest = std::min({nearest, task->attrs().Dt});
+  }
+
+  return nearest;
+};
 
 TaskState TaskSystem::operator()(const std::vector<int> &indices,
                                  time_t proportion) {

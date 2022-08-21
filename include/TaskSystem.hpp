@@ -34,6 +34,7 @@ public:
   void reset();
   TaskState readyState() { return getState(_readyTasks); };
   TaskState completedState() { return getState(_completedTasks); };
+  time_t nextEventAt() const;
   TaskState operator()(const std::vector<int> &indices, time_t proportion = 1);
   std::string toString() const;
 

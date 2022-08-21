@@ -61,6 +61,8 @@ public:
   virtual void dispatch(time_t dt = 1);
   virtual bool hasProcessor() { return _processor != nullptr; };
 
+  static void resetIdCount() { _idCount = 0; }
+
 protected:
   time_t _t{0};
   ProcessorPtr _processor;

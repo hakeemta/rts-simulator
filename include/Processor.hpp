@@ -7,6 +7,7 @@
 class Processor : public Resource {
 public:
   Processor() : Resource(++_idCount){};
+  static void resetIdCount() { _idCount = 0; }
 
 private:
   int _capacity{1};
